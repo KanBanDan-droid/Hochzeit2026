@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin · Adrian & Silvi RSVP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #1a1a1a;
+    --ink-soft: #6b6b6b;
+    --ink-faint: #c0c0c0;
+    --paper: #f9f7f4;
+    --white: #ffffff;
+    --accent: #c8a96e;
+    --green: #2d7a4f;
+    --green-light: #e8f5ee;
+    --red: #c0392b;
+    --red-light: #fdecea;
+    --border: rgba(26,26,26,0.1);
+  }
+
+  html, body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(26,26,26,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(26,26,26,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Login screen */
+  .login-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    background: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+
+  .login-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2.5rem 2rem;
+    width: 100%;
+    max-width: 360px;
+    text-align: center;
+  }
+
+  .login-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    font-weight: 300;
+    margin-bottom: 0.3rem;
+  }
+
+  .login-sub {
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    margin-bottom: 1.75rem;
+  }
+
+  .pw-input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    border: 1px solid var(--border);
+    background: var(--paper);
+    color: var(--ink);
+    border-radius: 2px;
+    outline: none;
+    text-align: center;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
+    transition: border-color 0.2s;
+  }
+  .pw-input:focus { border-color: var(--ink); }
+  .pw-input.error { border-color: var(--red); }
+
+  .login-btn {
+    width: 100%;
+    padding: 0.8rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    background: var(--ink);
+    color: var(--white);
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .login-btn:hover { opacity: 0.8; }
+
+  .login-error {
+    font-size: 0.73rem;
+    color: var(--red);
+    margin-top: 0.5rem;
+    min-height: 1rem;
+  }
+
+  /* Main app */
+  .app {
+    position: relative;
+    z-index: 1;
+    display: none;
+    padding: 3rem 1.5rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .app.visible { display: block; }
+
+  .app-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .app-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-weight: 300;
+  }
+
+  .app-title small {
+    display: block;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.3rem;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .btn {
+    padding: 0.6rem 1.2rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 1px solid var(--border);
+    background: var(--white);
+    color: var(--ink);
+  }
+  .btn:hover { border-color: var(--ink); }
+
+  .btn-primary {
+    background: var(--ink);
+    color: var(--white);
+    border-color: var(--ink);
+  }
+  .btn-primary:hover { opacity: 0.8; }
+
+  /* Stats row */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .stat-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.25rem 1.5rem;
+  }
+
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.5rem;
+    font-weight: 300;
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+
+  .stat-label {
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  .stat-card.attending .stat-num { color: var(--green); }
+  .stat-card.declining .stat-num { color: var(--red); }
+
+  /* Filter bar */
+  .filter-bar {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    padding: 0.4rem 0.9rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    border: 1px solid var(--border);
+    background: var(--white);
+    color: var(--ink-soft);
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .filter-btn.active {
+    background: var(--ink);
+    color: var(--white);
+    border-color: var(--ink);
+  }
+
+  /* Table */
+  .table-wrap {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+  }
+
+  thead th {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.1s;
+  }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--paper); }
+
+  td {
+    padding: 0.85rem 1rem;
+    vertical-align: middle;
+    color: var(--ink);
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+  }
+
+  .badge-yes { background: var(--green-light); color: var(--green); }
+  .badge-no { background: var(--red-light); color: var(--red); }
+
+  .td-muted { color: var(--ink-soft); }
+  .td-mono { font-size: 0.75rem; letter-spacing: 0.08em; color: var(--ink-soft); }
+
+  .empty-state {
+    padding: 3rem;
+    text-align: center;
+    color: var(--ink-soft);
+  }
+
+  .empty-state p { font-size: 0.85rem; }
+
+  .loading-state {
+    padding: 3rem;
+    text-align: center;
+    color: var(--ink-soft);
+    font-size: 0.85rem;
+  }
+
+  .config-banner {
+    background: #fff8e1;
+    border: 1px solid #f0d060;
+    border-radius: 3px;
+    padding: 0.75rem 1rem;
+    font-size: 0.78rem;
+    color: #7a6000;
+    margin-bottom: 1.5rem;
+  }
+
+  .config-banner code {
+    font-family: monospace;
+    background: rgba(0,0,0,0.07);
+    padding: 1px 5px;
+    border-radius: 2px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Login -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <p style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:.75rem">Admin</p>
+    <h1 class="login-title">Adrian & Silvi</h1>
+    <p class="login-sub">RSVP Dashboard · 7. August 2026</p>
+    <input class="pw-input" id="pwInput" type="password" placeholder="Passwort"
+      onkeydown="if(event.key==='Enter')doLogin()">
+    <div class="login-error" id="loginError"></div>
+    <button class="login-btn" onclick="doLogin()">Einloggen →</button>
+  </div>
+</div>
+
+<!-- App -->
+<div class="app" id="app">
+
+  <div class="config-banner" id="configBanner" style="display:none">
+    ⚠ Google Script URL noch nicht konfiguriert. Bitte <code>SCRIPT_URL</code> in <code>admin.html</code> und <code>form.html</code> ersetzen. Daten werden direkt aus Google Sheets geladen sobald konfiguriert.
+  </div>
+
+  <div class="app-header">
+    <div class="app-title">
+      <small>RSVP Übersicht</small>
+      Adrian & Silvi
+    </div>
+    <div class="header-actions">
+      <button class="btn" onclick="loadData()">↻ Aktualisieren</button>
+      <button class="btn btn-primary" onclick="downloadCSV()">CSV herunterladen</button>
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-num" id="statTotal">—</div>
+      <div class="stat-label">Antworten total</div>
+    </div>
+    <div class="stat-card attending">
+      <div class="stat-num" id="statYes">—</div>
+      <div class="stat-label">Zusagen</div>
+    </div>
+    <div class="stat-card declining">
+      <div class="stat-num" id="statNo">—</div>
+      <div class="stat-label">Absagen</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="statGuests">—</div>
+      <div class="stat-label">Personen total</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="statChildren">—</div>
+      <div class="stat-label">Kinder</div>
+    </div>
+  </div>
+
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="setFilter('all', this)">Alle</button>
+    <button class="filter-btn" onclick="setFilter('yes', this)">Zusagen</button>
+    <button class="filter-btn" onclick="setFilter('no', this)">Absagen</button>
+    <button class="filter-btn" onclick="setFilter('children', this)">Mit Kindern</button>
+  </div>
+
+  <div class="table-wrap">
+    <div class="loading-state" id="loadingState">Daten werden geladen...</div>
+    <table id="dataTable" style="display:none">
+      <thead>
+        <tr>
+          <th>Datum</th>
+          <th>Code</th>
+          <th>Name</th>
+          <th>Zusage</th>
+          <th>Begleitung</th>
+          <th>Kinder</th>
+          <th>Anmerkungen</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+    <div class="empty-state" id="emptyState" style="display:none">
+      <p>Noch keine Antworten eingegangen.</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── Config ────────────────────────────────────────────────────
+const ADMIN_PASSWORD = 'adrian-silvi-2026'; // Change this!
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwI8Vh1QEc65ji1C9TNo5xGQIVkWrFNRjfIwCQ376cGBFaEqH2Ciyx6T2YOnkyx7TcN/exec'; // Same as in form.html
+
+// ── Login ─────────────────────────────────────────────────────
+function doLogin() {
+  const pw = document.getElementById('pwInput').value;
+  const err = document.getElementById('loginError');
+
+  if (pw === ADMIN_PASSWORD) {
+    sessionStorage.setItem('admin_auth', '1');
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('app').classList.add('visible');
+    if (SCRIPT_URL === 'YOUR_GOOGLE_SCRIPT_URL_HERE') {
+      document.getElementById('configBanner').style.display = 'block';
+    }
+    loadData();
+  } else {
+    document.getElementById('pwInput').classList.add('error');
+    err.textContent = 'Falsches Passwort.';
+    setTimeout(() => {
+      document.getElementById('pwInput').classList.remove('error');
+    }, 600);
+  }
+}
+
+// Check session
+if (sessionStorage.getItem('admin_auth') === '1') {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('app').classList.add('visible');
+  if (SCRIPT_URL === 'YOUR_GOOGLE_SCRIPT_URL_HERE') {
+    document.getElementById('configBanner').style.display = 'block';
+  }
+}
+
+// ── Data ──────────────────────────────────────────────────────
+let allData = [];
+let currentFilter = 'all';
+
+async function loadData() {
+  if (SCRIPT_URL === 'YOUR_GOOGLE_SCRIPT_URL_HERE') {
+    // Show demo data when not configured
+    allData = getDemoData();
+    renderTable(allData);
+    updateStats(allData);
+    return;
+  }
+
+  document.getElementById('loadingState').style.display = 'block';
+  document.getElementById('dataTable').style.display = 'none';
+  document.getElementById('emptyState').style.display = 'none';
+
+  try {
+    const res = await fetch(`${SCRIPT_URL}?action=getAll&pw=${encodeURIComponent(ADMIN_PASSWORD)}`);
+    const json = await res.json();
+    allData = json.data || [];
+    renderTable(filterData(allData));
+    updateStats(allData);
+  } catch(e) {
+    document.getElementById('loadingState').textContent = 'Fehler beim Laden. Google Script URL prüfen.';
+  }
+}
+
+function getDemoData() {
+  return [
+    { timestamp:'2026-03-15T10:22:00Z', code:'MAYER01', guestName:'Familie Mayer', attending:'Ja', companion:'Thomas Mayer', childrenCount:'2', childrenDetails:'Emma (8), Luca (5)', notes:'Vegetarisch' },
+    { timestamp:'2026-03-18T14:05:00Z', code:'SMITH02', guestName:'The Smith Family', attending:'Yes', companion:'No', childrenCount:'0', childrenDetails:'—', notes:'—' },
+    { timestamp:'2026-03-20T09:10:00Z', code:'DEMO01', guestName:'Demo Gast', attending:'Nein', companion:'—', childrenCount:'0', childrenDetails:'—', notes:'Leider verhindert' },
+  ];
+}
+
+function filterData(data) {
+  if (currentFilter === 'all') return data;
+  if (currentFilter === 'yes') return data.filter(r => r.attending === 'Ja' || r.attending === 'Yes');
+  if (currentFilter === 'no') return data.filter(r => r.attending === 'Nein' || r.attending === 'No');
+  if (currentFilter === 'children') return data.filter(r => parseInt(r.childrenCount) > 0);
+  return data;
+}
+
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTable(filterData(allData));
+}
+
+function renderTable(data) {
+  document.getElementById('loadingState').style.display = 'none';
+
+  if (!data || data.length === 0) {
+    document.getElementById('dataTable').style.display = 'none';
+    document.getElementById('emptyState').style.display = 'block';
+    return;
+  }
+
+  document.getElementById('dataTable').style.display = 'table';
+  document.getElementById('emptyState').style.display = 'none';
+
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = '';
+
+  data.forEach(row => {
+    const isYes = row.attending === 'Ja' || row.attending === 'Yes';
+    const date = new Date(row.timestamp).toLocaleDateString('de-DE', {
+      day: '2-digit', month: '2-digit', year: '2-digit',
+      hour: '2-digit', minute: '2-digit'
+    });
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="td-mono">${date}</td>
+      <td class="td-mono">${row.code || '—'}</td>
+      <td><strong style="font-weight:500">${row.guestName || '—'}</strong></td>
+      <td><span class="badge ${isYes ? 'badge-yes' : 'badge-no'}">${row.attending}</span></td>
+      <td class="td-muted">${row.companion || '—'}</td>
+      <td class="td-muted">${parseInt(row.childrenCount) > 0 ? `${row.childrenCount} (${row.childrenDetails})` : '—'}</td>
+      <td class="td-muted" style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${(row.notes||'').replace(/"/g,"'")}">
+        ${row.notes || '—'}
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function updateStats(data) {
+  const yes = data.filter(r => r.attending === 'Ja' || r.attending === 'Yes');
+  const no = data.filter(r => r.attending === 'Nein' || r.attending === 'No');
+  const childrenTotal = data.reduce((s,r) => s + (parseInt(r.childrenCount) || 0), 0);
+
+  // Total persons: attending guests + companions
+  let persons = yes.length;
+  yes.forEach(r => {
+    if (r.companion && r.companion !== '—' && r.companion !== 'Nein' && r.companion !== 'No') persons++;
+  });
+
+  document.getElementById('statTotal').textContent = data.length;
+  document.getElementById('statYes').textContent = yes.length;
+  document.getElementById('statNo').textContent = no.length;
+  document.getElementById('statGuests').textContent = persons;
+  document.getElementById('statChildren').textContent = childrenTotal;
+}
+
+function downloadCSV() {
+  const headers = ['Zeitstempel','Code','Name','Zusage','Begleitung','Anzahl Kinder','Kinder Details','Anmerkungen'];
+  const rows = allData.map(r => [
+    r.timestamp, r.code, r.guestName, r.attending,
+    r.companion, r.childrenCount, r.childrenDetails, r.notes
+  ].map(v => `"${(v||'').replace(/"/g,'""')}"`).join(','));
+
+  const csv = [headers.join(','), ...rows].join('\n');
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `rsvp-adrian-silvi-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// Auto-load if already logged in
+if (document.getElementById('app').classList.contains('visible')) {
+  loadData();
+}
+</script>
+</body>
+</html>
