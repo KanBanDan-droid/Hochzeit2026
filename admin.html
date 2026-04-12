@@ -322,7 +322,7 @@ const saveCodes = obj => localStorage.setItem('wcodes', JSON.stringify(obj));
 function doLogin() {
   const pw = document.getElementById('pwInput').value;
   if (pw === getCfg('password')) {
-    sessionStorage.setItem('admin_auth','1');
+    localStorage.setItem('admin_auth','1');
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('app').classList.add('visible');
     initApp();
@@ -333,7 +333,7 @@ function doLogin() {
     setTimeout(() => inp.classList.remove('shake'), 400);
   }
 }
-if (sessionStorage.getItem('admin_auth')==='1') {
+if (localStorage.getItem('admin_auth')==='1') {
   document.getElementById('loginScreen').style.display='none';
   document.getElementById('app').classList.add('visible');
   initApp();
