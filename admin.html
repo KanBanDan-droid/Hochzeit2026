@@ -324,6 +324,9 @@ const setCfg = (k,v) => localStorage.setItem('wcfg_'+k, v);
 const loadCodes = () => { try { return JSON.parse(localStorage.getItem('wcodes')||'{}'); } catch(e) { return {}; } };
 const saveCodes = obj => localStorage.setItem('wcodes', JSON.stringify(obj));
 
+// Declare at top so all functions can access it
+let allData = [], currentFilter = 'all', unsubscribe = null;
+
 // ── Login ──────────────────────────────────────────────────────
 function doLogin() {
   const pw = document.getElementById('pwInput').value;
@@ -367,7 +370,6 @@ function saveSettings() {
 }
 
 // ── Firebase data ──────────────────────────────────────────────
-let allData = [], currentFilter = 'all', unsubscribe = null;
 
 function loadData() {
   document.getElementById('loadErrorBanner').style.display='none';
