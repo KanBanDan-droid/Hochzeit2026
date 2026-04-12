@@ -365,62 +365,73 @@ function saveSettings() {
   flashBanner('settingsSavedBanner');
 }
 
-// ── Data — read directly from Google Sheets CSV (no CORS) ─────
+// ── Data — Google Visualization API via script tag (no CORS) ──
 let allData = [], currentFilter = 'all';
 
-async function loadData() {
+function loadData() {
   const sheetId = getCfg('sheetId') || '161gyCU3XjbXOl6yrwlrA7nbEO9Yi_XpQS0EWfbQqPq8';
   document.getElementById('loadErrorBanner').style.display='none';
-
-  if (!sheetId) {
-    allData = getDemoData();
-    renderTable(filterData(allData));
-    updateStats(allData);
-    return;
-  }
 
   document.getElementById('loadingState').style.display='block';
   document.getElementById('dataTable').style.display='none';
   document.getElementById('emptyState').style.display='none';
   document.getElementById('configBanner').style.display='none';
 
-  // Google Sheets CSV export URL — works without CORS if sheet is public
-  const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=RSVPs`;
+  // Remove previous script tag
+  const old = document.getElementById('_gvizScript');
+  if (old) old.remove();
+
+  // Timeout fallback
+  clearTimeout(window._gvizTimer);
+  window._gvizTimer = setTimeout(() => {
+    document.getElementById('loadingState').style.display='none';
+    document.getElementById('loadErrorBanner').style.display='block';
+  }, 10000);
+
+  // Google Visualization Query API — works cross-origin via script tag
+  const script = document.createElement('script');
+  script.id = '_gvizScript';
+  script.src = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=RSVPs&callback=_gvizCb`;
+  script.onerror = () => {
+    clearTimeout(window._gvizTimer);
+    document.getElementById('loadingState').style.display='none';
+    document.getElementById('loadErrorBanner').style.display='block';
+  };
+  document.head.appendChild(script);
+}
+
+window._gvizCb = function(response) {
+  clearTimeout(window._gvizTimer);
 
   try {
-    const res = await fetch(csvUrl);
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const text = await res.text();
-    allData = parseCSV(text);
+    const table = response.table;
+    if (!table || !table.rows) { allData = []; renderTable([]); updateStats([]); return; }
+
+    // Map column indices to field names (based on sheet header order)
+    // Col: 0=timestamp, 1=code, 2=name, 3=language, 4=attending,
+    //      5=companion, 6=childrenCount, 7=childrenDetails, 8=notes
+    allData = table.rows.map(row => {
+      const v = i => (row.c && row.c[i] && row.c[i].v != null) ? String(row.c[i].v) : '';
+      return {
+        timestamp:       v(0),
+        code:            v(1),
+        guestName:       v(2),
+        language:        v(3),
+        attending:       v(4),
+        companion:       v(5) || '—',
+        childrenCount:   v(6) || '0',
+        childrenDetails: v(7) || '—',
+        notes:           v(8) || '—',
+      };
+    }).filter(r => r.code).reverse();
+
     renderTable(filterData(allData));
     updateStats(allData);
   } catch(e) {
     document.getElementById('loadingState').style.display='none';
     document.getElementById('loadErrorBanner').style.display='block';
   }
-}
-
-// Parse CSV into array of row objects
-function parseCSV(text) {
-  const lines = text.trim().split('\n');
-  if (lines.length < 2) return [];
-  // Skip header row (index 0), parse data rows
-  return lines.slice(1).map(line => {
-    const cols = line.match(/(".*?"|[^,]+)(?=,|$)/g) || [];
-    const clean = cols.map(c => c.replace(/^"|"$/g,'').replace(/""/g,'"').trim());
-    return {
-      timestamp:       clean[0] || '',
-      code:            clean[1] || '',
-      guestName:       clean[2] || '',
-      language:        clean[3] || '',
-      attending:       clean[4] || '',
-      companion:       clean[5] || '—',
-      childrenCount:   clean[6] || '0',
-      childrenDetails: clean[7] || '—',
-      notes:           clean[8] || '—',
-    };
-  }).filter(r => r.code).reverse();
-}
+};
 
 function getDemoData() {
   return [
