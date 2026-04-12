@@ -43,7 +43,7 @@
   .tab-panel { display: none; }
   .tab-panel.active { display: block; }
 
-  /* Panel header */
+  /* Headers */
   .panel-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
   .panel-title { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 300; }
   .panel-title small { display: block; font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.3rem; }
@@ -55,9 +55,13 @@
   .btn-primary { background: var(--ink); color: var(--white); border-color: var(--ink); }
   .btn-primary:hover { opacity: 0.8; }
 
+  /* Live dot */
+  .live-dot { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--green); }
+  .live-dot::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.3)} }
+
   /* Banners */
   .banner { border-radius: 3px; padding: 0.75rem 1rem; font-size: 0.78rem; margin-bottom: 1.5rem; line-height: 1.5; }
-  .banner code { font-family: monospace; background: rgba(0,0,0,0.07); padding: 1px 5px; border-radius: 2px; font-size: 0.85em; }
   .banner-warning { background: var(--amber-light); border: 1px solid #e0c040; color: var(--amber); }
   .banner-success { background: var(--green-light); border: 1px solid #7ecfa4; color: var(--green); }
   .banner-error { background: var(--red-light); border: 1px solid #e08080; color: var(--red); }
@@ -90,9 +94,9 @@
   .td-mono { font-size: 0.75rem; letter-spacing: 0.08em; color: var(--ink-soft); }
   .state-msg { padding: 3rem; text-align: center; color: var(--ink-soft); font-size: 0.85rem; }
 
-  /* Codes panel */
+  /* Codes */
   .codes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-  @media(max-width: 640px) { .codes-grid { grid-template-columns: 1fr; } }
+  @media(max-width:640px){ .codes-grid { grid-template-columns: 1fr; } }
   .codes-card { background: var(--white); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
   .codes-card-header { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap; }
   .codes-card-title { font-size: 10px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-soft); }
@@ -101,7 +105,7 @@
   .code-row:last-child { border-bottom: none; }
   .code-row:hover { background: var(--paper); }
   .code-pill { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.12em; font-family: monospace; background: var(--paper); border: 1px solid var(--border); padding: 3px 8px; border-radius: 2px; white-space: nowrap; }
-  .code-name { font-size: 0.82rem; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .code-name { font-size: 0.82rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .code-actions { display: flex; align-items: center; gap: 0.4rem; }
   .badge-pending { background: var(--amber-light); color: var(--amber); padding: 2px 7px; border-radius: 2px; font-size: 0.68rem; font-weight: 500; white-space: nowrap; }
   .badge-done { background: var(--green-light); color: var(--green); padding: 2px 7px; border-radius: 2px; font-size: 0.68rem; font-weight: 500; white-space: nowrap; }
@@ -145,7 +149,6 @@
 
 <!-- App -->
 <div class="app" id="app">
-
   <nav class="tab-nav">
     <button class="tab-btn active" onclick="showTab('rsvp',this)">RSVP Übersicht</button>
     <button class="tab-btn" onclick="showTab('codes',this)">Gäste-Codes</button>
@@ -155,18 +158,18 @@
   <!-- Tab 1: RSVP -->
   <div class="tab-panel active" id="tab-rsvp">
     <div class="panel-header">
-      <div class="panel-title"><small>RSVP Übersicht</small>Adrian & Silvi</div>
+      <div class="panel-title">
+        <small>RSVP Übersicht</small>Adrian & Silvi
+      </div>
       <div class="header-actions">
+        <span class="live-dot" id="liveDot" style="display:none">Live</span>
         <button class="btn" onclick="loadData()">↻ Aktualisieren</button>
         <button class="btn btn-primary" onclick="downloadCSV()">CSV herunterladen</button>
       </div>
     </div>
 
-    <div class="banner banner-warning" id="configBanner" style="display:none">
-      ⚠ Google Script URL noch nicht konfiguriert — bitte unter <strong>Einstellungen</strong> eintragen. Im Demo-Modus werden Beispieldaten angezeigt.
-    </div>
     <div class="banner banner-error" id="loadErrorBanner" style="display:none">
-      ✕ Fehler beim Laden. Das Google Sheet muss öffentlich sein: Sheet öffnen → <strong>Freigeben → Linkfreigabe → Jeder mit dem Link kann ansehen</strong>. Spreadsheet ID unter <strong>Einstellungen</strong> prüfen.
+      ✕ Firebase Verbindung fehlgeschlagen. Bitte Firestore-Regeln prüfen (siehe Einstellungen Tab).
     </div>
 
     <div class="stats-row">
@@ -186,7 +189,7 @@
     </div>
 
     <div class="table-wrap">
-      <div class="state-msg" id="loadingState">Daten werden geladen...</div>
+      <div class="state-msg" id="loadingState">Verbinde mit Firebase...</div>
       <table id="dataTable" style="display:none">
         <thead><tr>
           <th>Datum</th><th>Code</th><th>Name</th><th>Zusage</th>
@@ -203,16 +206,13 @@
     <div class="panel-header">
       <div class="panel-title"><small>Gäste-Codes</small>Verwaltung</div>
       <div class="header-actions">
-        <button class="btn" onclick="exportIndexHtml()" title="index.html mit aktuellen Codes herunterladen">index.html exportieren ↓</button>
-        <button class="btn btn-primary" onclick="showSavedBanner()">Änderungen gespeichert ✓</button>
+        <button class="btn" onclick="exportIndexHtml()">index.html exportieren ↓</button>
       </div>
     </div>
-
-    <div class="banner banner-success" id="codesSavedBanner" style="display:none">✓ Codes im Browser gespeichert.</div>
+    <div class="banner banner-success" id="codesSavedBanner" style="display:none">✓ Gespeichert.</div>
     <div class="banner banner-warning" id="codesSyncBanner" style="display:none">
-      ⚠ Codes wurden geändert. Klicke <strong>„index.html exportieren"</strong> und lade die Datei auf GitHub hoch — sonst funktionieren neue Codes auf der Landing Page nicht.
+      ⚠ Nach Änderungen: <strong>„index.html exportieren"</strong> klicken und auf GitHub hochladen.
     </div>
-
     <div class="codes-grid">
       <div class="codes-card">
         <div class="codes-card-header">
@@ -225,30 +225,16 @@
           <button class="btn btn-primary" onclick="addCode()" style="white-space:nowrap">+ Hinzufügen</button>
         </div>
       </div>
-
       <div class="codes-card">
-        <div class="codes-card-header">
-          <span class="codes-card-title">Bulk Import</span>
-        </div>
+        <div class="codes-card-header"><span class="codes-card-title">Bulk Import</span></div>
         <div style="padding:1.25rem">
           <textarea class="bulk-area" id="bulkInput" placeholder="CODE01, Familie Mayer&#10;CODE02, Familie Huber&#10;CODE03, The Smith Family"></textarea>
-          <p style="font-size:0.7rem;color:var(--ink-soft);margin-top:.5rem;line-height:1.6">
-            Ein Eintrag pro Zeile: <code style="font-family:monospace">CODE, Name</code><br>
-            Komma oder Tab als Trennzeichen.
-          </p>
+          <p style="font-size:0.7rem;color:var(--ink-soft);margin-top:.5rem;line-height:1.6">Ein Eintrag pro Zeile: <code style="font-family:monospace">CODE, Name</code></p>
           <div style="margin-top:.75rem;display:flex;gap:.5rem">
             <button class="btn btn-primary" onclick="bulkImport()" style="flex:1">Importieren</button>
             <button class="btn" onclick="document.getElementById('bulkInput').value=''">Leeren</button>
           </div>
           <div style="margin-top:.5rem;font-size:0.72rem;color:var(--ink-soft)" id="bulkResult"></div>
-        </div>
-        <div style="border-top:1px solid var(--border);padding:1.25rem">
-          <p style="font-size:10px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:.6rem">Tipps</p>
-          <p style="font-size:0.78rem;color:var(--ink-soft);line-height:1.8">
-            → 5–8 Zeichen, Großbuchstaben + Zahlen<br>
-            → Kein Leerzeichen oder Sonderzeichen<br>
-            → Nach Änderungen: <strong style="font-weight:500">index.html exportieren</strong>
-          </p>
         </div>
       </div>
     </div>
@@ -259,78 +245,99 @@
     <div class="panel-header">
       <div class="panel-title"><small>Konfiguration</small>Einstellungen</div>
     </div>
-
-    <div class="settings-section">
-      <div class="settings-title">Google Apps Script</div>
-      <div class="setting-row">
-        <label class="setting-label">Script URL</label>
-        <input class="setting-input" id="settingScriptUrl" type="url" placeholder="https://script.google.com/macros/s/..." spellcheck="false">
-      </div>
-      <p class="setting-hint">Die Web-App-URL — wird nur zum Speichern von Antworten (POST) benötigt.</p>
-    </div>
-
-    <div class="settings-section">
-      <div class="settings-title">Google Spreadsheet</div>
-      <div class="setting-row">
-        <label class="setting-label">Spreadsheet ID</label>
-        <input class="setting-input" id="settingSheetId" type="text" placeholder="161gyCU3XjbXOl6yrwlrA7nbEO9Yi_XpQS0EWfbQqPq8" spellcheck="false">
-      </div>
-      <p class="setting-hint">Die ID aus der Google Sheets URL: docs.google.com/spreadsheets/d/<strong>DIESE_ID</strong>/edit<br>
-      Das Sheet muss auf <strong>„Jeder mit dem Link kann ansehen"</strong> gesetzt sein (Freigeben → Linkfreigabe).</p>
-    </div>
-
     <div class="settings-section">
       <div class="settings-title">Admin-Zugang</div>
       <div class="setting-row">
         <label class="setting-label">Passwort</label>
         <input class="setting-input" id="settingPassword" type="text" placeholder="adrian-silvi-2026">
       </div>
-      <p class="setting-hint">Muss identisch mit <code>ADMIN_PASSWORD</code> in <code>google-script.js</code> sein.</p>
+      <p class="setting-hint">Nur lokal im Browser gespeichert.</p>
     </div>
-
     <div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:1rem">
       <button class="btn btn-primary" onclick="saveSettings()">Speichern</button>
-      <button class="btn" onclick="loadData();showTab('rsvp',document.querySelector('.tab-btn'))">Verbindung testen</button>
     </div>
-    <div class="banner banner-success" id="settingsSavedBanner" style="display:none">✓ Einstellungen gespeichert.</div>
-    <div class="banner banner-error" id="settingsErrorBanner" style="display:none"></div>
+    <div class="banner banner-success" id="settingsSavedBanner" style="display:none">✓ Gespeichert.</div>
 
     <div class="settings-section" style="margin-top:1.5rem">
-      <div class="settings-title">So funktioniert das Laden der Daten</div>
-      <p style="font-size:0.78rem;color:var(--ink-soft);line-height:1.7;margin-bottom:.75rem">
-        Der Admin liest Daten direkt aus dem Google Sheet als CSV — kein CORS-Problem. Dafür muss das Sheet einmalig öffentlich lesbar gemacht werden:
+      <div class="settings-title">Firebase Firestore Regeln</div>
+      <p style="font-size:0.78rem;color:var(--ink-soft);line-height:1.7;margin-bottom:1rem">
+        Falls der Fehler „Missing or insufficient permissions" erscheint, müssen die Firestore-Regeln angepasst werden:
       </p>
       <ol style="font-size:0.78rem;color:var(--ink-soft);line-height:2.2;padding-left:1.25rem">
-        <li>Google Sheet öffnen</li>
-        <li>Oben rechts auf <strong style="font-weight:500">„Share"</strong> klicken</li>
-        <li><strong style="font-weight:500">„Change to anyone with the link"</strong> → <strong style="font-weight:500">„Viewer"</strong></li>
-        <li>Done — Daten werden ab sofort geladen</li>
+        <li>Öffne <strong style="font-weight:500">console.firebase.google.com</strong></li>
+        <li>Dein Projekt → <strong style="font-weight:500">Firestore Database → Rules</strong></li>
+        <li>Ersetze den Inhalt mit den Regeln unten</li>
+        <li><strong style="font-weight:500">Publish</strong> klicken</li>
       </ol>
+      <pre style="margin-top:1rem;background:var(--paper);border:1px solid var(--border);border-radius:3px;padding:1rem;font-size:0.75rem;line-height:1.8;overflow-x:auto">rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Anyone can write RSVPs (guests submitting forms)
+    match /rsvps/{doc} {
+      allow create: if true;
+      allow read, update, delete: if false;
+    }
+    // Admin reads all RSVPs — secured by API key in Firebase config
+    match /rsvps/{doc} {
+      allow read: if true;
+    }
+  }
+}</pre>
     </div>
   </div>
-
 </div>
 
+<!-- Firebase -->
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+  import { getFirestore, collection, onSnapshot, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+  const app = initializeApp({
+    apiKey: "AIzaSyDyU8mx1XEO-OqOxwco--XKa7aG1E70czs",
+    authDomain: "adrian-silvi-hochzeit.firebaseapp.com",
+    projectId: "adrian-silvi-hochzeit",
+    storageBucket: "adrian-silvi-hochzeit.firebasestorage.app",
+    messagingSenderId: "442648885057",
+    appId: "1:442648885057:web:22d7408a442c5a99e3d3c0"
+  });
+  const db = getFirestore(app);
+
+  // Expose to global scope
+  window._startFirebaseListener = () => {
+    const q = query(collection(db, 'rsvps'), orderBy('createdAt', 'desc'));
+    return onSnapshot(q,
+      (snapshot) => {
+        const data = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+        window._onFirebaseData(data);
+      },
+      (err) => {
+        window._onFirebaseError(err);
+      }
+    );
+  };
+</script>
+
 <script>
-const DEFAULTS = { password: 'adrian-silvi-2026', scriptUrl: 'https://script.google.com/macros/s/AKfycbwI8Vh1QEc65ji1C9TNo5xGQIVkWrFNRjfIwCQ376cGBFaEqH2Ciyx6T2YOnkyx7TcN/exec', sheetId: '161gyCU3XjbXOl6yrwlrA7nbEO9Yi_XpQS0EWfbQqPq8' };
-const getCfg = k => localStorage.getItem('wcfg_'+k) || DEFAULTS[k] || '';
+const ADMIN_PASSWORD = 'adrian-silvi-2026';
+const getCfg = k => localStorage.getItem('wcfg_'+k) || '';
 const setCfg = (k,v) => localStorage.setItem('wcfg_'+k, v);
 const loadCodes = () => { try { return JSON.parse(localStorage.getItem('wcodes')||'{}'); } catch(e) { return {}; } };
 const saveCodes = obj => localStorage.setItem('wcodes', JSON.stringify(obj));
 
-// ── Login ────────────────────────────────────────────────────
+// ── Login ──────────────────────────────────────────────────────
 function doLogin() {
   const pw = document.getElementById('pwInput').value;
-  if (pw === getCfg('password')) {
+  const storedPw = getCfg('password') || ADMIN_PASSWORD;
+  if (pw === storedPw) {
     localStorage.setItem('admin_auth','1');
-    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('loginScreen').style.display='none';
     document.getElementById('app').classList.add('visible');
     initApp();
   } else {
     const inp = document.getElementById('pwInput');
     inp.classList.add('shake');
     document.getElementById('loginError').textContent = 'Falsches Passwort.';
-    setTimeout(() => inp.classList.remove('shake'), 400);
+    setTimeout(()=>inp.classList.remove('shake'), 400);
   }
 }
 if (localStorage.getItem('admin_auth')==='1') {
@@ -340,16 +347,12 @@ if (localStorage.getItem('admin_auth')==='1') {
 }
 
 function initApp() {
-  document.getElementById('settingScriptUrl').value = getCfg('scriptUrl');
-  document.getElementById('settingPassword').value = getCfg('password');
-  document.getElementById('settingSheetId').value = getCfg('sheetId') || '161gyCU3XjbXOl6yrwlrA7nbEO9Yi_XpQS0EWfbQqPq8';
-  const sheetId = getCfg('sheetId') || '161gyCU3XjbXOl6yrwlrA7nbEO9Yi_XpQS0EWfbQqPq8';
-  if (!sheetId) document.getElementById('configBanner').style.display='block';
+  document.getElementById('settingPassword').value = getCfg('password') || ADMIN_PASSWORD;
   renderCodesList();
   loadData();
 }
 
-// ── Tabs ──────────────────────────────────────────────────────
+// ── Tabs ───────────────────────────────────────────────────────
 function showTab(name, btn) {
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
@@ -357,90 +360,48 @@ function showTab(name, btn) {
   btn.classList.add('active');
 }
 
-// ── Settings ──────────────────────────────────────────────────
+// ── Settings ───────────────────────────────────────────────────
 function saveSettings() {
-  setCfg('scriptUrl', document.getElementById('settingScriptUrl').value.trim());
   setCfg('password', document.getElementById('settingPassword').value.trim());
-  setCfg('sheetId', document.getElementById('settingSheetId').value.trim());
   flashBanner('settingsSavedBanner');
 }
 
-// ── Data — Google Visualization API via script tag (no CORS) ──
-let allData = [], currentFilter = 'all';
+// ── Firebase data ──────────────────────────────────────────────
+let allData = [], currentFilter = 'all', unsubscribe = null;
 
 function loadData() {
-  const sheetId = getCfg('sheetId') || '161gyCU3XjbXOl6yrwlrA7nbEO9Yi_XpQS0EWfbQqPq8';
   document.getElementById('loadErrorBanner').style.display='none';
-
   document.getElementById('loadingState').style.display='block';
   document.getElementById('dataTable').style.display='none';
   document.getElementById('emptyState').style.display='none';
-  document.getElementById('configBanner').style.display='none';
 
-  // Remove previous script tag
-  const old = document.getElementById('_gvizScript');
-  if (old) old.remove();
+  if (unsubscribe) unsubscribe(); // stop previous listener
 
-  // Timeout fallback
-  clearTimeout(window._gvizTimer);
-  window._gvizTimer = setTimeout(() => {
-    document.getElementById('loadingState').style.display='none';
-    document.getElementById('loadErrorBanner').style.display='block';
-  }, 10000);
-
-  // Google Visualization Query API — works cross-origin via script tag
-  const script = document.createElement('script');
-  script.id = '_gvizScript';
-  script.src = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=RSVPs&callback=_gvizCb`;
-  script.onerror = () => {
-    clearTimeout(window._gvizTimer);
-    document.getElementById('loadingState').style.display='none';
-    document.getElementById('loadErrorBanner').style.display='block';
+  // Wait for Firebase module to be ready
+  const tryStart = () => {
+    if (window._startFirebaseListener) {
+      unsubscribe = window._startFirebaseListener();
+    } else {
+      setTimeout(tryStart, 100);
+    }
   };
-  document.head.appendChild(script);
+  tryStart();
 }
 
-window._gvizCb = function(response) {
-  clearTimeout(window._gvizTimer);
-
-  try {
-    const table = response.table;
-    if (!table || !table.rows) { allData = []; renderTable([]); updateStats([]); return; }
-
-    // Map column indices to field names (based on sheet header order)
-    // Col: 0=timestamp, 1=code, 2=name, 3=language, 4=attending,
-    //      5=companion, 6=childrenCount, 7=childrenDetails, 8=notes
-    allData = table.rows.map(row => {
-      const v = i => (row.c && row.c[i] && row.c[i].v != null) ? String(row.c[i].v) : '';
-      return {
-        timestamp:       v(0),
-        code:            v(1),
-        guestName:       v(2),
-        language:        v(3),
-        attending:       v(4),
-        companion:       v(5) || '—',
-        childrenCount:   v(6) || '0',
-        childrenDetails: v(7) || '—',
-        notes:           v(8) || '—',
-      };
-    }).filter(r => r.code).reverse();
-
-    renderTable(filterData(allData));
-    updateStats(allData);
-  } catch(e) {
-    document.getElementById('loadingState').style.display='none';
-    document.getElementById('loadErrorBanner').style.display='block';
-  }
+window._onFirebaseData = function(data) {
+  allData = data;
+  document.getElementById('liveDot').style.display='inline-flex';
+  renderTable(filterData(allData));
+  updateStats(allData);
 };
 
-function getDemoData() {
-  return [
-    {timestamp:'2026-03-15T10:22:00Z',code:'MAYER01',guestName:'Familie Mayer',attending:'Ja',companion:'Thomas Mayer',childrenCount:'2',childrenDetails:'Emma (8), Luca (5)',notes:'Vegetarisch'},
-    {timestamp:'2026-03-18T14:05:00Z',code:'SMITH02',guestName:'The Smith Family',attending:'Yes',companion:'No',childrenCount:'0',childrenDetails:'—',notes:'—'},
-    {timestamp:'2026-03-20T09:10:00Z',code:'DEMO01',guestName:'Demo Gast',attending:'Nein',companion:'—',childrenCount:'0',childrenDetails:'—',notes:'Leider verhindert'},
-  ];
-}
+window._onFirebaseError = function(err) {
+  console.error('Firebase error:', err);
+  document.getElementById('loadingState').style.display='none';
+  document.getElementById('loadErrorBanner').style.display='block';
+};
 
+// ── Table ──────────────────────────────────────────────────────
 function filterData(d) {
   if (currentFilter==='all') return d;
   if (currentFilter==='yes') return d.filter(r=>r.attending==='Ja'||r.attending==='Yes');
@@ -467,10 +428,21 @@ function renderTable(data) {
   tbody.innerHTML='';
   data.forEach(row=>{
     const isYes=row.attending==='Ja'||row.attending==='Yes';
-    const date=new Date(row.timestamp).toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'});
+    let dateStr='—';
+    if (row.createdAt?.toDate) {
+      dateStr=row.createdAt.toDate().toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'});
+    }
     const tr=document.createElement('tr');
     tr.className='fade-in';
-    tr.innerHTML=`<td class="td-mono">${date}</td><td class="td-mono">${row.code||'—'}</td><td><strong style="font-weight:500">${row.guestName||'—'}</strong></td><td><span class="badge ${isYes?'badge-yes':'badge-no'}">${row.attending}</span></td><td class="td-muted">${row.companion||'—'}</td><td class="td-muted">${parseInt(row.childrenCount)>0?`${row.childrenCount} (${row.childrenDetails})`:'—'}</td><td class="td-muted" style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${(row.notes||'').replace(/"/g,"'")}">${row.notes||'—'}</td>`;
+    tr.innerHTML=`
+      <td class="td-mono">${dateStr}</td>
+      <td class="td-mono">${row.code||'—'}</td>
+      <td><strong style="font-weight:500">${row.guestName||'—'}</strong></td>
+      <td><span class="badge ${isYes?'badge-yes':'badge-no'}">${row.attending||'—'}</span></td>
+      <td class="td-muted">${row.companion||'—'}</td>
+      <td class="td-muted">${parseInt(row.childrenCount)>0?`${row.childrenCount} (${row.childrenDetails})`:'—'}</td>
+      <td class="td-muted" style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${(row.notes||'').replace(/"/g,"'")}">${row.notes||'—'}</td>
+    `;
     tbody.appendChild(tr);
   });
 }
@@ -481,7 +453,7 @@ function updateStats(data) {
   const no=data.filter(r=>r.attending==='Nein'||r.attending==='No');
   const childrenTotal=data.reduce((s,r)=>s+(parseInt(r.childrenCount)||0),0);
   let persons=yes.length;
-  yes.forEach(r=>{if(r.companion&&r.companion!=='—'&&r.companion!=='Nein'&&r.companion!=='No')persons++;});
+  yes.forEach(r=>{ if(r.companion&&r.companion!=='—'&&r.companion!=='Nein'&&r.companion!=='No') persons++; });
   document.getElementById('statTotal').textContent=data.length;
   document.getElementById('statYes').textContent=yes.length;
   document.getElementById('statNo').textContent=no.length;
@@ -490,27 +462,29 @@ function updateStats(data) {
   document.getElementById('statChildren').textContent=childrenTotal;
 }
 function downloadCSV() {
-  const headers=['Zeitstempel','Code','Name','Zusage','Begleitung','Anzahl Kinder','Kinder Details','Anmerkungen'];
-  const rows=allData.map(r=>[r.timestamp,r.code,r.guestName,r.attending,r.companion,r.childrenCount,r.childrenDetails,r.notes].map(v=>`"${(v||'').replace(/"/g,'""')}"`).join(','));
+  const headers=['Datum','Code','Name','Zusage','Begleitung','Anzahl Kinder','Kinder Details','Anmerkungen'];
+  const rows=allData.map(r=>{
+    let dateStr='';
+    if (r.createdAt?.toDate) dateStr=r.createdAt.toDate().toISOString();
+    return [dateStr,r.code,r.guestName,r.attending,r.companion,r.childrenCount,r.childrenDetails,r.notes]
+      .map(v=>`"${(v!=null?String(v):'').replace(/"/g,'""')}"`).join(',');
+  });
   const csv=[headers.join(','),...rows].join('\n');
   const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
-  a.href=url;a.download=`rsvp-adrian-silvi-${new Date().toISOString().slice(0,10)}.csv`;a.click();
+  a.href=url; a.download=`rsvp-adrian-silvi-${new Date().toISOString().slice(0,10)}.csv`; a.click();
   URL.revokeObjectURL(url);
 }
 
-// ── Codes ─────────────────────────────────────────────────────
+// ── Codes ──────────────────────────────────────────────────────
 function renderCodesList() {
   const codes=loadCodes();
   const rsvped=new Set(allData.map(r=>r.code));
   const keys=Object.keys(codes).sort();
   document.getElementById('codeCount').textContent=keys.length;
   const list=document.getElementById('codesList');
-  if(keys.length===0){
-    list.innerHTML='<div class="state-msg" style="padding:1.5rem 1.25rem;text-align:left">Noch keine Codes. Unten hinzufügen →</div>';
-    return;
-  }
+  if(!keys.length){ list.innerHTML='<div class="state-msg" style="padding:1.5rem 1.25rem;text-align:left">Noch keine Codes. Unten hinzufügen →</div>'; return; }
   list.innerHTML=keys.map(code=>`
     <div class="code-row fade-in">
       <span class="code-pill">${code}</span>
@@ -525,71 +499,44 @@ function addCode() {
   const cEl=document.getElementById('newCode'), nEl=document.getElementById('newName');
   const code=cEl.value.trim().toUpperCase().replace(/\s+/g,'');
   const name=nEl.value.trim();
-  if(!code||!name){
-    if(!code){cEl.style.borderColor='var(--red)';}
-    if(!name){nEl.style.borderColor='var(--red)';}
-    setTimeout(()=>{cEl.style.borderColor='';nEl.style.borderColor='';},1200);
-    return;
-  }
-  const codes=loadCodes();
-  codes[code]=name;
-  saveCodes(codes);
-  cEl.value='';nEl.value='';
+  if(!code||!name){ if(!code)cEl.style.borderColor='var(--red)'; if(!name)nEl.style.borderColor='var(--red)'; setTimeout(()=>{cEl.style.borderColor='';nEl.style.borderColor='';},1200); return; }
+  const codes=loadCodes(); codes[code]=name; saveCodes(codes);
+  cEl.value=''; nEl.value='';
   renderCodesList();
   document.getElementById('codesSyncBanner').style.display='block';
 }
 function deleteCode(code) {
-  if(!confirm(`Code „${code}" (${loadCodes()[code]}) wirklich löschen?`)) return;
-  const codes=loadCodes();
-  delete codes[code];
-  saveCodes(codes);
+  if(!confirm(`Code „${code}" (${loadCodes()[code]}) löschen?`)) return;
+  const codes=loadCodes(); delete codes[code]; saveCodes(codes);
   renderCodesList();
   document.getElementById('codesSyncBanner').style.display='block';
 }
 function bulkImport() {
   const raw=document.getElementById('bulkInput').value.trim();
   if(!raw) return;
-  const codes=loadCodes();
-  let added=0,skipped=0;
+  const codes=loadCodes(); let added=0,skipped=0;
   raw.split('\n').map(l=>l.trim()).filter(Boolean).forEach(line=>{
     const parts=line.split(/[,\t]/).map(p=>p.trim());
-    if(parts.length>=2){
-      const code=parts[0].toUpperCase().replace(/\s+/g,'');
-      const name=parts.slice(1).join(', ').trim();
-      if(code&&name){codes[code]=name;added++;}else skipped++;
-    } else skipped++;
+    if(parts.length>=2){ const code=parts[0].toUpperCase().replace(/\s+/g,''); const name=parts.slice(1).join(', ').trim(); if(code&&name){codes[code]=name;added++;}else skipped++; } else skipped++;
   });
-  saveCodes(codes);
-  renderCodesList();
+  saveCodes(codes); renderCodesList();
   document.getElementById('bulkResult').textContent=`${added} hinzugefügt${skipped>0?`, ${skipped} übersprungen`:''}`;
   document.getElementById('bulkInput').value='';
   document.getElementById('codesSyncBanner').style.display='block';
 }
-function showSavedBanner() { flashBanner('codesSavedBanner'); }
-
 function exportIndexHtml() {
   const codes=loadCodes();
-  const codesJson=JSON.stringify(codes,null,2);
-  fetch('index.html')
-    .then(r=>r.text())
-    .then(html=>{
-      const updated=html.replace(/const GUEST_CODES\s*=\s*\{[\s\S]*?\};/,`const GUEST_CODES = ${codesJson};`);
-      const blob=new Blob([updated],{type:'text/html;charset=utf-8'});
-      const url=URL.createObjectURL(blob);
-      const a=document.createElement('a');
-      a.href=url;a.download='index.html';a.click();
-      URL.revokeObjectURL(url);
-      document.getElementById('codesSyncBanner').style.display='none';
-      flashBanner('codesSavedBanner');
-    })
-    .catch(()=>alert('index.html konnte nicht geladen werden.\n\nStelle sicher, dass alle Dateien auf GitHub Pages (oder einem lokalen Server) laufen — nicht als lokale Datei geöffnet sind.'));
+  fetch('index.html').then(r=>r.text()).then(html=>{
+    const updated=html.replace(/const GUEST_CODES\s*=\s*\{[\s\S]*?\};/,`const GUEST_CODES = ${JSON.stringify(codes,null,2)};`);
+    const blob=new Blob([updated],{type:'text/html;charset=utf-8'});
+    const url=URL.createObjectURL(blob); const a=document.createElement('a');
+    a.href=url; a.download='index.html'; a.click(); URL.revokeObjectURL(url);
+    document.getElementById('codesSyncBanner').style.display='none';
+    flashBanner('codesSavedBanner');
+  }).catch(()=>alert('index.html konnte nicht geladen werden. Stelle sicher dass alle Dateien auf GitHub Pages laufen.'));
 }
 
-function flashBanner(id) {
-  const el=document.getElementById(id);
-  el.style.display='block';
-  setTimeout(()=>el.style.display='none',3500);
-}
+function flashBanner(id) { const el=document.getElementById(id); el.style.display='block'; setTimeout(()=>el.style.display='none',3500); }
 </script>
 </body>
 </html>

@@ -8,457 +8,72 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
-    --ink: #1a1a1a;
-    --ink-soft: #6b6b6b;
-    --ink-faint: #b8b8b8;
-    --paper: #f9f7f4;
-    --white: #ffffff;
-    --accent: #c8a96e;
-    --accent-light: #f0e8d8;
-    --green: #2d7a4f;
-    --green-light: #e8f5ee;
-    --red: #c0392b;
-    --red-light: #fdecea;
+    --ink: #1a1a1a; --ink-soft: #6b6b6b; --ink-faint: #b8b8b8;
+    --paper: #f9f7f4; --white: #ffffff; --accent: #c8a96e;
+    --green: #2d7a4f; --green-light: #e8f5ee;
+    --red: #c0392b; --red-light: #fdecea;
     --border: rgba(26,26,26,0.1);
   }
-
-  html, body {
-    background: var(--paper);
-    color: var(--ink);
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 300;
-  }
-
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(26,26,26,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(26,26,26,0.03) 1px, transparent 1px);
-    background-size: 60px 60px;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .page {
-    position: relative;
-    z-index: 1;
-    min-height: 100vh;
-    padding: 3rem 1.5rem 4rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .top-bar {
-    width: 100%;
-    max-width: 560px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 3rem;
-  }
-
-  .back-link {
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
-    text-decoration: none;
-    transition: color 0.15s;
-  }
+  html, body { background: var(--paper); color: var(--ink); font-family: 'DM Sans', sans-serif; font-weight: 300; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: linear-gradient(rgba(26,26,26,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(26,26,26,0.03) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; z-index: 0; }
+  .page { position: relative; z-index: 1; min-height: 100vh; padding: 3rem 1.5rem 4rem; display: flex; flex-direction: column; align-items: center; }
+  .top-bar { width: 100%; max-width: 560px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 3rem; }
+  .back-link { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); text-decoration: none; transition: color 0.15s; }
   .back-link:hover { color: var(--ink); }
-
-  .lang-toggle {
-    display: flex;
-    gap: 0.4rem;
-  }
-  .lang-btn {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 4px 10px;
-    border: 1px solid var(--border);
-    background: transparent;
-    color: var(--ink-soft);
-    cursor: pointer;
-    border-radius: 2px;
-    transition: all 0.15s;
-  }
-  .lang-btn.active {
-    background: var(--ink);
-    color: var(--white);
-    border-color: var(--ink);
-  }
-
-  .header {
-    text-align: center;
-    margin-bottom: 2.5rem;
-    width: 100%;
-    max-width: 560px;
-  }
-
-  .eyebrow {
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 0.75rem;
-  }
-
-  .guest-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-size: 2rem;
-    font-weight: 300;
-    color: var(--ink);
-    margin-bottom: 0.4rem;
-  }
-
-  .header-sub {
-    font-size: 0.82rem;
-    color: var(--ink-soft);
-  }
-
-  .form-card {
-    width: 100%;
-    max-width: 560px;
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    overflow: hidden;
-  }
-
-  .form-section {
-    padding: 2rem 2rem;
-    border-bottom: 1px solid var(--border);
-  }
+  .lang-toggle { display: flex; gap: 0.4rem; }
+  .lang-btn { font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 10px; border: 1px solid var(--border); background: transparent; color: var(--ink-soft); cursor: pointer; border-radius: 2px; transition: all 0.15s; }
+  .lang-btn.active { background: var(--ink); color: var(--white); border-color: var(--ink); }
+  .header { text-align: center; margin-bottom: 2.5rem; width: 100%; max-width: 560px; }
+  .eyebrow { font-size: 10px; font-weight: 500; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; }
+  .guest-name { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 2rem; font-weight: 300; color: var(--ink); margin-bottom: 0.4rem; }
+  .header-sub { font-size: 0.82rem; color: var(--ink-soft); }
+  .form-card { width: 100%; max-width: 560px; background: var(--white); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+  .form-section { padding: 2rem; border-bottom: 1px solid var(--border); }
   .form-section:last-child { border-bottom: none; }
-
-  .section-label {
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
-    margin-bottom: 1.25rem;
-  }
-
-  .section-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.2rem;
-    font-weight: 400;
-    color: var(--ink);
-    margin-bottom: 0.3rem;
-  }
-
-  .section-desc {
-    font-size: 0.8rem;
-    color: var(--ink-soft);
-    margin-bottom: 1.25rem;
-    line-height: 1.5;
-  }
-
-  /* Attendance toggle */
-  .attend-toggle {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.75rem;
-  }
-
-  .attend-btn {
-    padding: 1rem;
-    border: 1px solid var(--border);
-    background: var(--paper);
-    border-radius: 3px;
-    cursor: pointer;
-    text-align: center;
-    transition: all 0.15s;
-    font-family: 'DM Sans', sans-serif;
-  }
-
-  .attend-btn .icon {
-    font-size: 1.4rem;
-    margin-bottom: 0.4rem;
-    display: block;
-  }
-
-  .attend-btn .label {
-    font-size: 0.78rem;
-    font-weight: 500;
-    letter-spacing: 0.05em;
-    color: var(--ink-soft);
-    display: block;
-  }
-
-  .attend-btn.yes.selected {
-    background: var(--green-light);
-    border-color: var(--green);
-  }
+  .section-label { font-size: 10px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 1.25rem; }
+  .section-title { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 400; color: var(--ink); margin-bottom: 0.3rem; }
+  .section-desc { font-size: 0.8rem; color: var(--ink-soft); margin-bottom: 1.25rem; line-height: 1.5; }
+  .attend-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .attend-btn { padding: 1rem; border: 1px solid var(--border); background: var(--paper); border-radius: 3px; cursor: pointer; text-align: center; transition: all 0.15s; font-family: 'DM Sans', sans-serif; }
+  .attend-btn .icon { font-size: 1.4rem; margin-bottom: 0.4rem; display: block; }
+  .attend-btn .label { font-size: 0.78rem; font-weight: 500; letter-spacing: 0.05em; color: var(--ink-soft); display: block; }
+  .attend-btn.yes.selected { background: var(--green-light); border-color: var(--green); }
   .attend-btn.yes.selected .label { color: var(--green); }
-
-  .attend-btn.no.selected {
-    background: var(--red-light);
-    border-color: var(--red);
-  }
+  .attend-btn.no.selected { background: var(--red-light); border-color: var(--red); }
   .attend-btn.no.selected .label { color: var(--red); }
-
-  .attend-btn:not(.selected):hover {
-    border-color: rgba(26,26,26,0.25);
-    background: var(--white);
-  }
-
-  /* Yes/No toggle for companion & kids */
-  .yn-toggle {
-    display: flex;
-    gap: 0.5rem;
-  }
-
-  .yn-btn {
-    padding: 0.5rem 1.25rem;
-    border: 1px solid var(--border);
-    background: var(--paper);
-    border-radius: 2px;
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.78rem;
-    font-weight: 500;
-    color: var(--ink-soft);
-    transition: all 0.15s;
-  }
-
-  .yn-btn.selected {
-    background: var(--ink);
-    color: var(--white);
-    border-color: var(--ink);
-  }
-
-  /* Companion name field */
-  .field-row {
-    margin-top: 1rem;
-  }
-
-  .field-label {
-    font-size: 0.72rem;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
-    margin-bottom: 0.4rem;
-    display: block;
-  }
-
-  .text-input {
-    width: 100%;
-    padding: 0.7rem 0.9rem;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 300;
-    border: 1px solid var(--border);
-    background: var(--paper);
-    color: var(--ink);
-    border-radius: 2px;
-    outline: none;
-    transition: border-color 0.2s;
-  }
+  .attend-btn:not(.selected):hover { border-color: rgba(26,26,26,0.25); background: var(--white); }
+  .yn-toggle { display: flex; gap: 0.5rem; }
+  .yn-btn { padding: 0.5rem 1.25rem; border: 1px solid var(--border); background: var(--paper); border-radius: 2px; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 500; color: var(--ink-soft); transition: all 0.15s; }
+  .yn-btn.selected { background: var(--ink); color: var(--white); border-color: var(--ink); }
+  .field-row { margin-top: 1rem; }
+  .field-label { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 0.4rem; display: block; }
+  .text-input { width: 100%; padding: 0.7rem 0.9rem; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 300; border: 1px solid var(--border); background: var(--paper); color: var(--ink); border-radius: 2px; outline: none; transition: border-color 0.2s; }
   .text-input:focus { border-color: var(--ink); }
-
-  textarea.text-input {
-    resize: vertical;
-    min-height: 80px;
-    line-height: 1.5;
-  }
-
-  /* Children table */
-  .children-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    margin-top: 1rem;
-  }
-
-  .child-row {
-    display: grid;
-    grid-template-columns: 1fr auto auto;
-    gap: 0.5rem;
-    align-items: center;
-  }
-
-  .child-row input {
-    padding: 0.6rem 0.8rem;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.85rem;
-    border: 1px solid var(--border);
-    background: var(--paper);
-    color: var(--ink);
-    border-radius: 2px;
-    outline: none;
-    transition: border-color 0.2s;
-    width: 100%;
-  }
+  textarea.text-input { resize: vertical; min-height: 80px; line-height: 1.5; }
+  .children-list { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem; }
+  .child-row { display: grid; grid-template-columns: 1fr 72px auto; gap: 0.5rem; align-items: center; }
+  .child-row input { padding: 0.6rem 0.8rem; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; border: 1px solid var(--border); background: var(--paper); color: var(--ink); border-radius: 2px; outline: none; transition: border-color 0.2s; width: 100%; }
   .child-row input:focus { border-color: var(--ink); }
-
-  .age-input {
-    width: 72px !important;
-    text-align: center;
-  }
-
-  .remove-child {
-    width: 28px;
-    height: 28px;
-    border: 1px solid var(--border);
-    background: transparent;
-    border-radius: 2px;
-    cursor: pointer;
-    color: var(--ink-soft);
-    font-size: 1rem;
-    line-height: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.15s;
-    flex-shrink: 0;
-  }
+  .age-input { text-align: center; }
+  .remove-child { width: 28px; height: 28px; border: 1px solid var(--border); background: transparent; border-radius: 2px; cursor: pointer; color: var(--ink-soft); font-size: 1rem; display: flex; align-items: center; justify-content: center; transition: all 0.15s; flex-shrink: 0; }
   .remove-child:hover { border-color: var(--red); color: var(--red); }
-
-  .add-child-btn {
-    margin-top: 0.75rem;
-    padding: 0.5rem 1rem;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.05em;
-    border: 1px dashed var(--border);
-    background: transparent;
-    color: var(--ink-soft);
-    border-radius: 2px;
-    cursor: pointer;
-    transition: all 0.15s;
-  }
+  .child-header { display: grid; grid-template-columns: 1fr 72px 28px; gap: 0.5rem; margin-top: 1rem; margin-bottom: 0.25rem; }
+  .child-header span { font-size: 0.65rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); padding: 0 0.8rem; }
+  .add-child-btn { margin-top: 0.75rem; padding: 0.5rem 1rem; font-family: 'DM Sans', sans-serif; font-size: 0.75rem; font-weight: 500; border: 1px dashed var(--border); background: transparent; color: var(--ink-soft); border-radius: 2px; cursor: pointer; transition: all 0.15s; }
   .add-child-btn:hover { border-color: var(--ink); color: var(--ink); border-style: solid; }
-
-  .child-header {
-    display: grid;
-    grid-template-columns: 1fr 72px 28px;
-    gap: 0.5rem;
-    margin-top: 1rem;
-    margin-bottom: 0.25rem;
-  }
-  .child-header span {
-    font-size: 0.65rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
-    padding: 0 0.8rem;
-  }
-
-  /* Submit area */
-  .submit-area {
-    padding: 2rem;
-    background: var(--white);
-    border-top: 1px solid var(--border);
-  }
-
-  .submit-btn {
-    width: 100%;
-    padding: 1rem;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.78rem;
-    font-weight: 500;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    background: var(--ink);
-    color: var(--white);
-    border: none;
-    border-radius: 2px;
-    cursor: pointer;
-    transition: opacity 0.2s;
-  }
+  .submit-area { width: 100%; max-width: 560px; padding: 2rem 0 0; }
+  .submit-btn { width: 100%; padding: 1rem; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; background: var(--ink); color: var(--white); border: none; border-radius: 2px; cursor: pointer; transition: opacity 0.2s; }
   .submit-btn:hover { opacity: 0.8; }
   .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
-  .form-note {
-    font-size: 0.72rem;
-    color: var(--ink-faint);
-    text-align: center;
-    margin-top: 0.75rem;
-  }
-
-  /* Collapsible sections */
-  .collapsible {
-    overflow: hidden;
-    transition: max-height 0.3s ease, opacity 0.3s ease;
-  }
-  .collapsible.hidden {
-    max-height: 0 !important;
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  /* Success state */
-  .success-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: var(--paper);
-    z-index: 100;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 2rem;
-  }
+  .form-note { font-size: 0.72rem; color: var(--ink-faint); text-align: center; margin-top: 0.75rem; }
+  .collapsible { overflow: hidden; transition: max-height 0.3s ease, opacity 0.3s ease; }
+  .collapsible.hidden { max-height: 0 !important; opacity: 0; pointer-events: none; }
+  .success-overlay { display: none; position: fixed; inset: 0; background: var(--paper); z-index: 100; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2rem; }
   .success-overlay.show { display: flex; }
-
-  .success-icon {
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background: var(--green-light);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 1.5rem;
-    font-size: 1.5rem;
-  }
-
-  .success-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 2rem;
-    font-weight: 300;
-    margin-bottom: 0.5rem;
-  }
-
-  .success-sub {
-    font-size: 0.85rem;
-    color: var(--ink-soft);
-    line-height: 1.6;
-    max-width: 340px;
-  }
-
-  .decline-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: var(--paper);
-    z-index: 100;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 2rem;
-  }
-  .decline-overlay.show { display: flex; }
-
-  /* Lang switching */
+  .success-icon { width: 56px; height: 56px; border-radius: 50%; background: var(--green-light); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; font-size: 1.5rem; }
+  .success-title { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 300; margin-bottom: 0.5rem; }
+  .success-sub { font-size: 0.85rem; color: var(--ink-soft); line-height: 1.6; max-width: 340px; }
   [data-lang="en"] { display: none; }
   body.en [data-lang="de"] { display: none; }
   body.en [data-lang="en"] { display: block; }
@@ -469,350 +84,204 @@
 </head>
 <body>
 
-<!-- Success overlay -->
 <div class="success-overlay" id="successOverlay">
   <div class="success-icon">✓</div>
-  <h2 class="success-title">
-    <span data-lang="de">Wir freuen uns!</span>
-    <span data-lang="en">See you there!</span>
-  </h2>
+  <h2 class="success-title"><span data-lang="de">Wir freuen uns!</span><span data-lang="en">See you there!</span></h2>
   <p class="success-sub" id="successMsg"></p>
 </div>
-
-<!-- Decline overlay -->
-<div class="decline-overlay" id="declineOverlay">
+<div class="success-overlay" id="declineOverlay">
   <div style="font-size:2rem;margin-bottom:1.5rem">♡</div>
-  <h2 class="success-title">
-    <span data-lang="de">Schade, dass ihr nicht dabei sein könnt.</span>
-    <span data-lang="en">We'll miss you!</span>
-  </h2>
-  <p class="success-sub">
-    <span data-lang="de">Eure Antwort wurde gespeichert. Wir denken trotzdem an euch!</span>
-    <span data-lang="en">Your response has been saved. We'll be thinking of you!</span>
-  </p>
+  <h2 class="success-title"><span data-lang="de">Schade, dass ihr nicht dabei sein könnt.</span><span data-lang="en">We'll miss you!</span></h2>
+  <p class="success-sub"><span data-lang="de">Eure Antwort wurde gespeichert. Wir denken trotzdem an euch!</span><span data-lang="en">Your response has been saved. We'll be thinking of you!</span></p>
 </div>
 
 <div class="page">
   <div class="top-bar">
-    <a href="index.html" class="back-link">← 
-      <span data-lang="de">Zurück</span>
-      <span data-lang="en">Back</span>
-    </a>
+    <a href="index.html" class="back-link">← <span data-lang="de">Zurück</span><span data-lang="en">Back</span></a>
     <div class="lang-toggle">
       <button class="lang-btn active" onclick="setLang('de')">DE</button>
       <button class="lang-btn" onclick="setLang('en')">EN</button>
     </div>
   </div>
-
   <div class="header">
     <div class="eyebrow">RSVP · Adrian & Silvi · 7. August 2026</div>
     <div class="guest-name" id="guestGreeting">Liebe Gäste</div>
-    <p class="header-sub">
-      <span data-lang="de">Bitte bis zum 30. April 2026 antworten.</span>
-      <span data-lang="en">Please respond by April 30, 2026.</span>
-    </p>
+    <p class="header-sub"><span data-lang="de">Bitte bis zum 30. April 2026 antworten.</span><span data-lang="en">Please respond by April 30, 2026.</span></p>
   </div>
-
   <div class="form-card">
-
-    <!-- Section 1: Attendance -->
     <div class="form-section">
       <div class="section-label">01</div>
-      <div class="section-title">
-        <span data-lang="de">Werdet ihr dabei sein?</span>
-        <span data-lang="en">Will you be attending?</span>
-      </div>
-      <p class="section-desc">
-        <span data-lang="de">Wir freuen uns über eure Rückmeldung!</span>
-        <span data-lang="en">We'd love to know if you can make it!</span>
-      </p>
+      <div class="section-title"><span data-lang="de">Werdet ihr dabei sein?</span><span data-lang="en">Will you be attending?</span></div>
+      <p class="section-desc"><span data-lang="de">Wir freuen uns über eure Rückmeldung!</span><span data-lang="en">We'd love to know if you can make it!</span></p>
       <div class="attend-toggle">
         <button class="attend-btn yes" onclick="setAttendance('yes')">
           <span class="icon">🥂</span>
-          <span class="label" data-lang="de">Ja, ich bin dabei!</span>
-          <span class="label" data-lang="en">Yes, I'll be there!</span>
+          <span class="label"><span data-lang="de">Ja, ich bin dabei!</span><span data-lang="en">Yes, I'll be there!</span></span>
         </button>
         <button class="attend-btn no" onclick="setAttendance('no')">
           <span class="icon">♡</span>
-          <span class="label" data-lang="de">Leider nicht möglich</span>
-          <span class="label" data-lang="en">Sadly can't make it</span>
+          <span class="label"><span data-lang="de">Leider nicht möglich</span><span data-lang="en">Sadly can't make it</span></span>
         </button>
       </div>
     </div>
-
-    <!-- Sections shown only when attending -->
     <div id="attendingSection" class="collapsible hidden" style="max-height:2000px">
-
-      <!-- Section 2: Companion -->
       <div class="form-section">
         <div class="section-label">02</div>
-        <div class="section-title">
-          <span data-lang="de">Bringt ihr eine Begleitung mit?</span>
-          <span data-lang="en">Are you bringing a plus-one?</span>
-        </div>
+        <div class="section-title"><span data-lang="de">Bringt ihr eine Begleitung mit?</span><span data-lang="en">Are you bringing a plus-one?</span></div>
         <div class="yn-toggle">
-          <button class="yn-btn" id="companionYes" onclick="setCompanion('yes')">
-            <span data-lang="de">Ja</span><span data-lang="en">Yes</span>
-          </button>
-          <button class="yn-btn" id="companionNo" onclick="setCompanion('no')">
-            <span data-lang="de">Nein</span><span data-lang="en">No</span>
-          </button>
+          <button class="yn-btn" id="companionYes" onclick="setCompanion('yes')"><span data-lang="de">Ja</span><span data-lang="en">Yes</span></button>
+          <button class="yn-btn" id="companionNo" onclick="setCompanion('no')"><span data-lang="de">Nein</span><span data-lang="en">No</span></button>
         </div>
-
         <div id="companionFields" class="collapsible hidden" style="max-height:200px">
           <div class="field-row">
-            <label class="field-label" for="companionName">
-              <span data-lang="de">Name der Begleitung</span>
-              <span data-lang="en">Name of your plus-one</span>
-            </label>
-            <input class="text-input" id="companionName" type="text"
-              placeholder="Name">
+            <label class="field-label"><span data-lang="de">Name der Begleitung</span><span data-lang="en">Name of your plus-one</span></label>
+            <input class="text-input" id="companionName" type="text" placeholder="Name">
           </div>
         </div>
       </div>
-
-      <!-- Section 3: Children -->
       <div class="form-section">
         <div class="section-label">03</div>
-        <div class="section-title">
-          <span data-lang="de">Bringt ihr Kinder mit?</span>
-          <span data-lang="en">Are you bringing children?</span>
-        </div>
+        <div class="section-title"><span data-lang="de">Bringt ihr Kinder mit?</span><span data-lang="en">Are you bringing children?</span></div>
         <div class="yn-toggle">
-          <button class="yn-btn" id="childrenYes" onclick="setChildren('yes')">
-            <span data-lang="de">Ja</span><span data-lang="en">Yes</span>
-          </button>
-          <button class="yn-btn" id="childrenNo" onclick="setChildren('no')">
-            <span data-lang="de">Nein</span><span data-lang="en">No</span>
-          </button>
+          <button class="yn-btn" id="childrenYes" onclick="setChildren('yes')"><span data-lang="de">Ja</span><span data-lang="en">Yes</span></button>
+          <button class="yn-btn" id="childrenNo" onclick="setChildren('no')"><span data-lang="de">Nein</span><span data-lang="en">No</span></button>
         </div>
-
         <div id="childrenFields" class="collapsible hidden" style="max-height:800px">
           <div class="child-header">
-            <span data-lang="de">Name</span><span data-lang="en">Name</span>
-            <span data-lang="de">Alter</span><span data-lang="en">Age</span>
+            <span><span data-lang="de">Name</span><span data-lang="en">Name</span></span>
+            <span><span data-lang="de">Alter</span><span data-lang="en">Age</span></span>
             <span></span>
           </div>
           <div class="children-list" id="childrenList"></div>
-          <button class="add-child-btn" onclick="addChild()">
-            + <span data-lang="de">Kind hinzufügen</span><span data-lang="en">Add child</span>
-          </button>
+          <button class="add-child-btn" onclick="addChild()">+ <span data-lang="de">Kind hinzufügen</span><span data-lang="en">Add child</span></button>
         </div>
       </div>
-
-      <!-- Section 4: Notes -->
       <div class="form-section">
         <div class="section-label">04</div>
-        <div class="section-title">
-          <span data-lang="de">Anmerkungen</span>
-          <span data-lang="en">Notes</span>
-        </div>
-        <p class="section-desc">
-          <span data-lang="de">Allergien, Diätwünsche, besondere Bedürfnisse — alles was wir wissen sollten.</span>
-          <span data-lang="en">Allergies, dietary requirements, special needs — anything we should know.</span>
-        </p>
-        <textarea class="text-input" id="notes"
-          placeholder="" rows="3"></textarea>
+        <div class="section-title"><span data-lang="de">Anmerkungen</span><span data-lang="en">Notes</span></div>
+        <p class="section-desc"><span data-lang="de">Allergien, Diätwünsche, besondere Bedürfnisse.</span><span data-lang="en">Allergies, dietary requirements, special needs.</span></p>
+        <textarea class="text-input" id="notes" rows="3"></textarea>
       </div>
-
-    </div><!-- /attendingSection -->
-
-  </div><!-- /form-card -->
-
-  <div class="submit-area" style="width:100%;max-width:560px">
+    </div>
+  </div>
+  <div class="submit-area">
     <button class="submit-btn" id="submitBtn" onclick="submitForm()" disabled>
-      <span data-lang="de">Antwort absenden →</span>
-      <span data-lang="en">Send response →</span>
+      <span data-lang="de">Antwort absenden →</span><span data-lang="en">Send response →</span>
     </button>
-    <p class="form-note">
-      <span data-lang="de">Eure Daten werden nur für die Hochzeitsplanung verwendet.</span>
-      <span data-lang="en">Your data will only be used for wedding planning purposes.</span>
-    </p>
+    <p class="form-note"><span data-lang="de">Eure Daten werden nur für die Hochzeitsplanung verwendet.</span><span data-lang="en">Your data will only be used for wedding planning.</span></p>
   </div>
 </div>
 
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+  import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+  const app = initializeApp({
+    apiKey: "AIzaSyDyU8mx1XEO-OqOxwco--XKa7aG1E70czs",
+    authDomain: "adrian-silvi-hochzeit.firebaseapp.com",
+    projectId: "adrian-silvi-hochzeit",
+    storageBucket: "adrian-silvi-hochzeit.firebasestorage.app",
+    messagingSenderId: "442648885057",
+    appId: "1:442648885057:web:22d7408a442c5a99e3d3c0"
+  });
+  const db = getFirestore(app);
+  window._submitToFirebase = async (payload) => {
+    await addDoc(collection(db, 'rsvps'), { ...payload, createdAt: serverTimestamp() });
+  };
+</script>
+
 <script>
-// ── Config ───────────────────────────────────────────────────
-// Replace with your Google Apps Script Web App URL after setup
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwI8Vh1QEc65ji1C9TNo5xGQIVkWrFNRjfIwCQ376cGBFaEqH2Ciyx6T2YOnkyx7TcN/exec';
-
-// ── State ─────────────────────────────────────────────────────
-let state = {
-  attendance: null,
-  companion: null,
-  children: null,
-  childCount: 0
-};
-
 const guestCode = sessionStorage.getItem('wedding_code') || '???';
 const guestName = sessionStorage.getItem('wedding_guest') || '';
 const savedLang = sessionStorage.getItem('wedding_lang');
+let state = { attendance: null, companion: null, children: null, childCount: 0 };
 
-// ── Init ──────────────────────────────────────────────────────
 window.onload = () => {
   if (savedLang === 'en') setLang('en');
-
-  if (guestName) {
-    const isEN = document.body.classList.contains('en');
-    document.getElementById('guestGreeting').textContent =
-      isEN ? `Dear ${guestName}` : `Liebe/r ${guestName}`;
-  }
-
-  // Textarea placeholder
-  const textarea = document.getElementById('notes');
-  document.body.classList.contains('en')
-    ? textarea.setAttribute('placeholder', 'Dietary requirements, allergies, ...')
-    : textarea.setAttribute('placeholder', 'Allergien, Ernährungswünsche, ...');
+  if (guestName) document.getElementById('guestGreeting').textContent = savedLang==='en' ? `Dear ${guestName}` : `Liebe/r ${guestName}`;
+  updatePlaceholder();
 };
-
-// ── Language ──────────────────────────────────────────────────
 function setLang(l) {
-  document.body.classList.toggle('en', l === 'en');
-  document.querySelectorAll('.lang-btn').forEach((b,i) => {
-    b.classList.toggle('active', (i===0&&l==='de')||(i===1&&l==='en'));
-  });
+  document.body.classList.toggle('en', l==='en');
+  document.querySelectorAll('.lang-btn').forEach((b,i) => b.classList.toggle('active',(i===0&&l==='de')||(i===1&&l==='en')));
   localStorage.setItem('wedding_lang', l);
-
-  if (guestName) {
-    document.getElementById('guestGreeting').textContent =
-      l === 'en' ? `Dear ${guestName}` : `Liebe/r ${guestName}`;
-  }
-
-  const textarea = document.getElementById('notes');
-  l === 'en'
-    ? textarea.setAttribute('placeholder', 'Dietary requirements, allergies, ...')
-    : textarea.setAttribute('placeholder', 'Allergien, Ernährungswünsche, ...');
+  if (guestName) document.getElementById('guestGreeting').textContent = l==='en' ? `Dear ${guestName}` : `Liebe/r ${guestName}`;
+  updatePlaceholder();
 }
-
-// ── Attendance ────────────────────────────────────────────────
+function updatePlaceholder() {
+  const isEN = document.body.classList.contains('en');
+  document.getElementById('notes').setAttribute('placeholder', isEN ? 'Dietary requirements, allergies, ...' : 'Allergien, Ernährungswünsche, ...');
+}
 function setAttendance(val) {
   state.attendance = val;
-  document.querySelectorAll('.attend-btn').forEach(b => b.classList.remove('selected'));
+  document.querySelectorAll('.attend-btn').forEach(b=>b.classList.remove('selected'));
   document.querySelector(`.attend-btn.${val}`).classList.add('selected');
-
-  const section = document.getElementById('attendingSection');
-  if (val === 'yes') {
-    section.classList.remove('hidden');
-  } else {
-    section.classList.add('hidden');
-  }
-
+  document.getElementById('attendingSection').classList.toggle('hidden', val!=='yes');
   updateSubmitBtn();
 }
-
-// ── Companion ─────────────────────────────────────────────────
 function setCompanion(val) {
   state.companion = val;
-  document.getElementById('companionYes').classList.toggle('selected', val === 'yes');
-  document.getElementById('companionNo').classList.toggle('selected', val === 'no');
-
-  const fields = document.getElementById('companionFields');
-  val === 'yes' ? fields.classList.remove('hidden') : fields.classList.add('hidden');
+  document.getElementById('companionYes').classList.toggle('selected', val==='yes');
+  document.getElementById('companionNo').classList.toggle('selected', val==='no');
+  document.getElementById('companionFields').classList.toggle('hidden', val!=='yes');
   updateSubmitBtn();
 }
-
-// ── Children ──────────────────────────────────────────────────
 function setChildren(val) {
   state.children = val;
-  document.getElementById('childrenYes').classList.toggle('selected', val === 'yes');
-  document.getElementById('childrenNo').classList.toggle('selected', val === 'no');
-
+  document.getElementById('childrenYes').classList.toggle('selected', val==='yes');
+  document.getElementById('childrenNo').classList.toggle('selected', val==='no');
   const fields = document.getElementById('childrenFields');
-  if (val === 'yes') {
-    fields.classList.remove('hidden');
-    if (state.childCount === 0) addChild();
-  } else {
-    fields.classList.add('hidden');
-  }
+  if (val==='yes') { fields.classList.remove('hidden'); if (state.childCount===0) addChild(); }
+  else fields.classList.add('hidden');
   updateSubmitBtn();
 }
-
 function addChild() {
   state.childCount++;
-  const list = document.getElementById('childrenList');
+  const isEN = document.body.classList.contains('en');
   const row = document.createElement('div');
   row.className = 'child-row';
-  row.dataset.id = state.childCount;
-  const isEN = document.body.classList.contains('en');
-  row.innerHTML = `
-    <input type="text" placeholder="${isEN ? 'Name' : 'Name'}" class="child-name">
-    <input type="number" placeholder="${isEN ? 'Age' : 'Alter'}" min="0" max="17" class="age-input child-age">
-    <button class="remove-child" onclick="removeChild(this)" title="Entfernen">×</button>
-  `;
-  list.appendChild(row);
+  row.innerHTML = `<input type="text" placeholder="Name" class="child-name"><input type="number" placeholder="${isEN?'Age':'Alter'}" min="0" max="17" class="age-input child-age"><button class="remove-child" onclick="removeChild(this)">×</button>`;
+  document.getElementById('childrenList').appendChild(row);
 }
-
 function removeChild(btn) {
   btn.closest('.child-row').remove();
-  if (document.querySelectorAll('.child-row').length === 0) {
-    state.childCount = 0;
-  }
+  if (!document.querySelectorAll('.child-row').length) state.childCount=0;
 }
-
-// ── Submit button state ───────────────────────────────────────
 function updateSubmitBtn() {
-  const btn = document.getElementById('submitBtn');
   let ready = state.attendance !== null;
-  if (state.attendance === 'yes') {
-    ready = ready && state.companion !== null && state.children !== null;
-  }
-  btn.disabled = !ready;
+  if (state.attendance==='yes') ready = ready && state.companion!==null && state.children!==null;
+  document.getElementById('submitBtn').disabled = !ready;
 }
-
-// ── Submit ────────────────────────────────────────────────────
 async function submitForm() {
   const btn = document.getElementById('submitBtn');
   const isEN = document.body.classList.contains('en');
   btn.disabled = true;
   btn.textContent = isEN ? 'Sending...' : 'Wird gesendet...';
-
-  // Gather children data
   const children = [];
   document.querySelectorAll('.child-row').forEach(row => {
     const name = row.querySelector('.child-name')?.value?.trim();
     const age = row.querySelector('.child-age')?.value?.trim();
-    if (name) children.push({ name, age: age || '?' });
+    if (name) children.push({ name, age: age||'?' });
   });
-
   const payload = {
-    timestamp: new Date().toISOString(),
-    code: guestCode,
-    guestName: guestName,
-    language: isEN ? 'EN' : 'DE',
-    attending: state.attendance === 'yes' ? (isEN ? 'Yes' : 'Ja') : (isEN ? 'No' : 'Nein'),
-    companion: state.attendance === 'yes'
-      ? (state.companion === 'yes'
-          ? (document.getElementById('companionName').value.trim() || (isEN ? 'Yes (name missing)' : 'Ja (Name fehlt)'))
-          : (isEN ? 'No' : 'Nein'))
-      : '—',
-    childrenCount: state.attendance === 'yes' && state.children === 'yes' ? children.length : 0,
-    childrenDetails: children.length > 0
-      ? children.map(c => `${c.name} (${c.age})`).join(', ')
-      : '—',
-    notes: document.getElementById('notes').value.trim() || '—',
+    code: guestCode, guestName, language: isEN?'EN':'DE',
+    attending: state.attendance==='yes' ? (isEN?'Yes':'Ja') : (isEN?'No':'Nein'),
+    companion: state.attendance==='yes' ? (state.companion==='yes' ? (document.getElementById('companionName').value.trim()||(isEN?'Yes':'Ja')) : (isEN?'No':'Nein')) : '—',
+    childrenCount: state.attendance==='yes' && state.children==='yes' ? children.length : 0,
+    childrenDetails: children.length>0 ? children.map(c=>`${c.name} (${c.age})`).join(', ') : '—',
+    notes: document.getElementById('notes').value.trim()||'—',
   };
-
   try {
-    await fetch(SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
+    await window._submitToFirebase(payload);
+    if (state.attendance==='yes') {
+      document.getElementById('successMsg').textContent = isEN ? `We can't wait to celebrate with you, ${guestName}!` : `Wir freuen uns riesig mit euch zu feiern, ${guestName}!`;
+      document.getElementById('successOverlay').classList.add('show');
+    } else {
+      document.getElementById('declineOverlay').classList.add('show');
+    }
   } catch(e) {
-    // no-cors mode: response is opaque, treat as success
-  }
-
-  // Show result screen
-  if (state.attendance === 'yes') {
-    const overlay = document.getElementById('successOverlay');
-    const msg = document.getElementById('successMsg');
-    msg.textContent = isEN
-      ? `We can't wait to celebrate with you, ${guestName}! We'll send you all the details soon.`
-      : `Wir freuen uns riesig, mit euch zu feiern, ${guestName}! Alle Details folgen in Kürze.`;
-    overlay.classList.add('show');
-  } else {
-    document.getElementById('declineOverlay').classList.add('show');
+    btn.disabled=false;
+    btn.textContent = isEN?'Send response →':'Antwort absenden →';
+    alert(isEN?'Something went wrong. Please try again.':'Etwas ist schiefgelaufen. Bitte nochmal versuchen.');
   }
 }
 </script>
