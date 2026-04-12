@@ -299,7 +299,7 @@
 </div>
 
 <script>
-const DEFAULTS = { password: 'adrian-silvi-2026', scriptUrl: '' };
+const DEFAULTS = { password: 'adrian-silvi-2026', scriptUrl: 'https://script.google.com/macros/s/AKfycbwI8Vh1QEc65ji1C9TNo5xGQIVkWrFNRjfIwCQ376cGBFaEqH2Ciyx6T2YOnkyx7TcN/exec' };
 const getCfg = k => localStorage.getItem('wcfg_'+k) || DEFAULTS[k] || '';
 const setCfg = (k,v) => localStorage.setItem('wcfg_'+k, v);
 const loadCodes = () => { try { return JSON.parse(localStorage.getItem('wcodes')||'{}'); } catch(e) { return {}; } };
