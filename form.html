@@ -31,18 +31,22 @@
   .form-card { width: 100%; max-width: 560px; background: var(--white); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
   .form-section { padding: 2rem; border-bottom: 1px solid var(--border); }
   .form-section:last-child { border-bottom: none; }
-  .section-label { font-size: 10px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 1.25rem; }
-  .section-title { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 400; color: var(--ink); margin-bottom: 0.3rem; }
+  .section-label { font-size: 10px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 1rem; }
+  .section-title { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; font-weight: 400; color: var(--ink); margin-bottom: 1.25rem; line-height: 1.3; }
   .section-desc { font-size: 0.8rem; color: var(--ink-soft); margin-bottom: 1.25rem; line-height: 1.5; }
+
+  /* Attend toggle */
   .attend-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
   .attend-btn { padding: 1rem; border: 1px solid var(--border); background: var(--paper); border-radius: 3px; cursor: pointer; text-align: center; transition: all 0.15s; font-family: 'DM Sans', sans-serif; }
   .attend-btn .icon { font-size: 1.4rem; margin-bottom: 0.4rem; display: block; }
-  .attend-btn .label { font-size: 0.78rem; font-weight: 500; letter-spacing: 0.05em; color: var(--ink-soft); display: block; }
+  .attend-btn .label { font-size: 0.78rem; font-weight: 500; color: var(--ink-soft); display: block; }
   .attend-btn.yes.selected { background: var(--green-light); border-color: var(--green); }
   .attend-btn.yes.selected .label { color: var(--green); }
   .attend-btn.no.selected { background: var(--red-light); border-color: var(--red); }
   .attend-btn.no.selected .label { color: var(--red); }
   .attend-btn:not(.selected):hover { border-color: rgba(26,26,26,0.25); background: var(--white); }
+
+  /* Children */
   .yn-toggle { display: flex; gap: 0.5rem; }
   .yn-btn { padding: 0.5rem 1.25rem; border: 1px solid var(--border); background: var(--paper); border-radius: 2px; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 500; color: var(--ink-soft); transition: all 0.15s; }
   .yn-btn.selected { background: var(--ink); color: var(--white); border-color: var(--ink); }
@@ -53,7 +57,7 @@
   textarea.text-input { resize: vertical; min-height: 80px; line-height: 1.5; }
   .children-list { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem; }
   .child-row { display: grid; grid-template-columns: 1fr 72px auto; gap: 0.5rem; align-items: center; }
-  .child-row input { padding: 0.6rem 0.8rem; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; border: 1px solid var(--border); background: var(--paper); color: var(--ink); border-radius: 2px; outline: none; transition: border-color 0.2s; width: 100%; }
+  .child-row input { padding: 0.6rem 0.8rem; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; border: 1px solid var(--border); background: var(--paper); color: var(--ink); border-radius: 2px; outline: none; width: 100%; }
   .child-row input:focus { border-color: var(--ink); }
   .age-input { text-align: center; }
   .remove-child { width: 28px; height: 28px; border: 1px solid var(--border); background: transparent; border-radius: 2px; cursor: pointer; color: var(--ink-soft); font-size: 1rem; display: flex; align-items: center; justify-content: center; transition: all 0.15s; flex-shrink: 0; }
@@ -62,18 +66,22 @@
   .child-header span { font-size: 0.65rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); padding: 0 0.8rem; }
   .add-child-btn { margin-top: 0.75rem; padding: 0.5rem 1rem; font-family: 'DM Sans', sans-serif; font-size: 0.75rem; font-weight: 500; border: 1px dashed var(--border); background: transparent; color: var(--ink-soft); border-radius: 2px; cursor: pointer; transition: all 0.15s; }
   .add-child-btn:hover { border-color: var(--ink); color: var(--ink); border-style: solid; }
+
+  .collapsible { overflow: hidden; transition: max-height 0.3s ease, opacity 0.3s ease; }
+  .collapsible.hidden { max-height: 0 !important; opacity: 0; pointer-events: none; }
+
   .submit-area { width: 100%; max-width: 560px; padding: 2rem 0 0; }
   .submit-btn { width: 100%; padding: 1rem; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; background: var(--ink); color: var(--white); border: none; border-radius: 2px; cursor: pointer; transition: opacity 0.2s; }
   .submit-btn:hover { opacity: 0.8; }
   .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
   .form-note { font-size: 0.72rem; color: var(--ink-faint); text-align: center; margin-top: 0.75rem; }
-  .collapsible { overflow: hidden; transition: max-height 0.3s ease, opacity 0.3s ease; }
-  .collapsible.hidden { max-height: 0 !important; opacity: 0; pointer-events: none; }
+
   .success-overlay { display: none; position: fixed; inset: 0; background: var(--paper); z-index: 100; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2rem; }
   .success-overlay.show { display: flex; }
   .success-icon { width: 56px; height: 56px; border-radius: 50%; background: var(--green-light); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; font-size: 1.5rem; }
   .success-title { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 300; margin-bottom: 0.5rem; }
   .success-sub { font-size: 0.85rem; color: var(--ink-soft); line-height: 1.6; max-width: 340px; }
+
   [data-lang="en"] { display: none; }
   body.en [data-lang="de"] { display: none; }
   body.en [data-lang="en"] { display: block; }
@@ -85,88 +93,37 @@
 <body>
 
 <div class="success-overlay" id="successOverlay">
-  <div class="success-icon">✓</div>
+  <div class="success-icon">&#10003;</div>
   <h2 class="success-title"><span data-lang="de">Wir freuen uns!</span><span data-lang="en">See you there!</span></h2>
   <p class="success-sub" id="successMsg"></p>
 </div>
 <div class="success-overlay" id="declineOverlay">
-  <div style="font-size:2rem;margin-bottom:1.5rem">♡</div>
-  <h2 class="success-title"><span data-lang="de">Schade, dass ihr nicht dabei sein könnt.</span><span data-lang="en">We'll miss you!</span></h2>
-  <p class="success-sub"><span data-lang="de">Eure Antwort wurde gespeichert. Wir denken trotzdem an euch!</span><span data-lang="en">Your response has been saved. We'll be thinking of you!</span></p>
+  <div style="font-size:2rem;margin-bottom:1.5rem">&#9825;</div>
+  <h2 class="success-title"><span data-lang="de">Schade, ihr fehlt uns!</span><span data-lang="en">We'll miss you!</span></h2>
+  <p class="success-sub"><span data-lang="de">Eure Antwort wurde gespeichert.</span><span data-lang="en">Your response has been saved.</span></p>
 </div>
 
 <div class="page">
   <div class="top-bar">
-    <a href="index.html" class="back-link">← <span data-lang="de">Zurück</span><span data-lang="en">Back</span></a>
+    <a href="index.html" class="back-link">&#8592; <span data-lang="de">Zurück</span><span data-lang="en">Back</span></a>
     <div class="lang-toggle">
       <button class="lang-btn active" onclick="setLang('de')">DE</button>
       <button class="lang-btn" onclick="setLang('en')">EN</button>
     </div>
   </div>
+
   <div class="header">
-    <div class="eyebrow">RSVP · Adrian & Silvi · 7. August 2026</div>
-    <div class="guest-name" id="guestGreeting">Liebe Gäste</div>
+    <div class="eyebrow">RSVP · Adrian &amp; Silvi · 7. August 2026</div>
+    <div class="guest-name" id="guestGreeting"></div>
     <p class="header-sub"><span data-lang="de">Bitte bis zum 30. April 2026 antworten.</span><span data-lang="en">Please respond by April 30, 2026.</span></p>
   </div>
-  <div class="form-card">
-    <div class="form-section">
-      <div class="section-label">01</div>
-      <div class="section-title"><span data-lang="de">Werdet ihr dabei sein?</span><span data-lang="en">Will you be attending?</span></div>
-      <p class="section-desc"><span data-lang="de">Wir freuen uns über eure Rückmeldung!</span><span data-lang="en">We'd love to know if you can make it!</span></p>
-      <div class="attend-toggle">
-        <button class="attend-btn yes" onclick="setAttendance('yes')">
-          <span class="icon">🥂</span>
-          <span class="label"><span data-lang="de">Ja, ich bin dabei!</span><span data-lang="en">Yes, I'll be there!</span></span>
-        </button>
-        <button class="attend-btn no" onclick="setAttendance('no')">
-          <span class="icon">♡</span>
-          <span class="label"><span data-lang="de">Leider nicht möglich</span><span data-lang="en">Sadly can't make it</span></span>
-        </button>
-      </div>
-    </div>
-    <div id="attendingSection" class="collapsible hidden" style="max-height:2000px">
-      <div class="form-section" id="section02">
-        <div class="section-label">02</div>
-        <div class="section-title"><span data-lang="de">Bringt ihr eine Begleitung mit?</span><span data-lang="en">Are you bringing a plus-one?</span></div>
-        <div class="yn-toggle">
-          <button class="yn-btn" id="companionYes" onclick="setCompanion('yes')"><span data-lang="de">Ja</span><span data-lang="en">Yes</span></button>
-          <button class="yn-btn" id="companionNo" onclick="setCompanion('no')"><span data-lang="de">Nein</span><span data-lang="en">No</span></button>
-        </div>
-        <div id="companionFields" class="collapsible hidden" style="max-height:200px">
-          <div class="field-row">
-            <label class="field-label"><span data-lang="de">Name der Begleitung</span><span data-lang="en">Name of your plus-one</span></label>
-            <input class="text-input" id="companionName" type="text" placeholder="Name">
-          </div>
-        </div>
-      </div>
-      <div class="form-section" id="section03">
-        <div class="section-label">03</div>
-        <div class="section-title"><span data-lang="de">Bringt ihr Kinder mit?</span><span data-lang="en">Are you bringing children?</span></div>
-        <div class="yn-toggle">
-          <button class="yn-btn" id="childrenYes" onclick="setChildren('yes')"><span data-lang="de">Ja</span><span data-lang="en">Yes</span></button>
-          <button class="yn-btn" id="childrenNo" onclick="setChildren('no')"><span data-lang="de">Nein</span><span data-lang="en">No</span></button>
-        </div>
-        <div id="childrenFields" class="collapsible hidden" style="max-height:800px">
-          <div class="child-header">
-            <span><span data-lang="de">Name</span><span data-lang="en">Name</span></span>
-            <span><span data-lang="de">Alter</span><span data-lang="en">Age</span></span>
-            <span></span>
-          </div>
-          <div class="children-list" id="childrenList"></div>
-          <button class="add-child-btn" onclick="addChild()">+ <span data-lang="de">Kind hinzufügen</span><span data-lang="en">Add child</span></button>
-        </div>
-      </div>
-      <div class="form-section">
-        <div class="section-label">04</div>
-        <div class="section-title"><span data-lang="de">Anmerkungen</span><span data-lang="en">Notes</span></div>
-        <p class="section-desc"><span data-lang="de">Allergien, Diätwünsche, besondere Bedürfnisse.</span><span data-lang="en">Allergies, dietary requirements, special needs.</span></p>
-        <textarea class="text-input" id="notes" rows="3"></textarea>
-      </div>
-    </div>
-  </div>
+
+  <!-- The form sections are built dynamically by buildForm() -->
+  <div class="form-card" id="formCard"></div>
+
   <div class="submit-area">
     <button class="submit-btn" id="submitBtn" onclick="submitForm()" disabled>
-      <span data-lang="de">Antwort absenden →</span><span data-lang="en">Send response →</span>
+      <span data-lang="de">Antwort absenden</span><span data-lang="en">Send response</span>
     </button>
     <p class="form-note"><span data-lang="de">Eure Daten werden nur für die Hochzeitsplanung verwendet.</span><span data-lang="en">Your data will only be used for wedding planning.</span></p>
   </div>
@@ -190,111 +147,219 @@
 </script>
 
 <script>
-const guestCode = sessionStorage.getItem('wedding_code') || '???';
-const guestName = sessionStorage.getItem('wedding_guest') || '';
-const savedLang = sessionStorage.getItem('wedding_lang');
-const formType  = parseInt(sessionStorage.getItem('wedding_type') || '3'); // 1, 2, or 3
-let state = { attendance: null, companion: null, children: null, childCount: 0 };
+// ── Session data ───────────────────────────────────────────────
+const guestCode    = sessionStorage.getItem('wedding_code')    || '???';
+const guestName    = sessionStorage.getItem('wedding_guest')   || '';
+const guestPartner = sessionStorage.getItem('wedding_partner') || '';
+const formType     = sessionStorage.getItem('wedding_type')    || '1'; // '1','2','3'
+const savedLang    = sessionStorage.getItem('wedding_lang');
 
-window.onload = () => {
-  if (savedLang === 'en') setLang('en');
-  if (guestName) document.getElementById('guestGreeting').textContent = savedLang==='en' ? `Dear ${guestName}` : `Liebe/r ${guestName}`;
-  updatePlaceholder();
-  applyFormType();
+// State per person (type 1: only person1; type 2/3: person1 + person2)
+const state = {
+  p1: null,      // 'yes' | 'no'
+  p2: null,      // 'yes' | 'no' (types 2 & 3 only)
+  children: null, // 'yes' | 'no' (type 3 only)
+  childCount: 0,
 };
 
-// Show/hide sections based on formType
-function applyFormType() {
-  document.getElementById('section02').style.display = formType >= 2 ? '' : 'none';
-  document.getElementById('section03').style.display = formType >= 3 ? '' : 'none';
+// ── Init ───────────────────────────────────────────────────────
+window.onload = () => {
+  if (savedLang === 'en') setLang('en');
+  buildGreeting();
+  buildForm();
+};
+
+function buildGreeting() {
+  const isEN = document.body.classList.contains('en');
+  let greeting = '';
+  if (formType === '1') {
+    greeting = isEN ? `Dear ${guestName}` : `Liebe/r ${guestName}`;
+  } else {
+    greeting = isEN
+      ? `Dear ${guestName} &amp; ${guestPartner}`
+      : `Liebe/r ${guestName} &amp; ${guestPartner}`;
+  }
+  document.getElementById('guestGreeting').innerHTML = greeting;
 }
 
-function setLang(l) {
-  document.body.classList.toggle('en', l==='en');
-  document.querySelectorAll('.lang-btn').forEach((b,i) => b.classList.toggle('active',(i===0&&l==='de')||(i===1&&l==='en')));
-  localStorage.setItem('wedding_lang', l);
-  if (guestName) document.getElementById('guestGreeting').textContent = l==='en' ? `Dear ${guestName}` : `Liebe/r ${guestName}`;
-  updatePlaceholder();
-}
-function updatePlaceholder() {
+// ── Form builder ───────────────────────────────────────────────
+function buildForm() {
   const isEN = document.body.classList.contains('en');
-  document.getElementById('notes').setAttribute('placeholder', isEN ? 'Dietary requirements, allergies, ...' : 'Allergien, Ernährungswünsche, ...');
+  const card = document.getElementById('formCard');
+  let html = '';
+
+  if (formType === '1') {
+    // ── Type 1: Single person ──────────────────────────────────
+    html += attendSection('p1', isEN ? `Will <em>${guestName}</em> be attending?` : `Wird <em>${guestName}</em> dabei sein?`, 'p1');
+  } else {
+    // ── Type 2 & 3: Couple ────────────────────────────────────
+    html += attendSection('p1', isEN ? `Will <em>${guestName}</em> be attending?` : `Wird <em>${guestName}</em> dabei sein?`, 'p1');
+    html += attendSection('p2', isEN ? `Will <em>${guestPartner}</em> be attending?` : `Wird <em>${guestPartner}</em> dabei sein?`, 'p2');
+  }
+
+  if (formType === '3') {
+    // ── Children section ──────────────────────────────────────
+    html += `
+    <div class="form-section" id="sectionChildren">
+      <div class="section-label">03</div>
+      <div class="section-title">${isEN ? 'Are you bringing children?' : 'Bringt ihr Kinder mit?'}</div>
+      <div class="yn-toggle">
+        <button class="yn-btn" id="childrenYes" onclick="setChildren('yes')">${isEN ? 'Yes' : 'Ja'}</button>
+        <button class="yn-btn" id="childrenNo"  onclick="setChildren('no')">${isEN ? 'No' : 'Nein'}</button>
+      </div>
+      <div id="childrenFields" class="collapsible hidden" style="max-height:800px">
+        <div class="child-header">
+          <span>${isEN ? 'Name' : 'Name'}</span>
+          <span>${isEN ? 'Age' : 'Alter'}</span>
+          <span></span>
+        </div>
+        <div class="children-list" id="childrenList"></div>
+        <button class="add-child-btn" onclick="addChild()">+ ${isEN ? 'Add child' : 'Kind hinzufügen'}</button>
+      </div>
+    </div>`;
+  }
+
+  // ── Notes (always last) ────────────────────────────────────
+  const sectionNum = formType === '3' ? '04' : formType === '1' ? '02' : '03';
+  html += `
+  <div class="form-section">
+    <div class="section-label">${sectionNum}</div>
+    <div class="section-title">${isEN ? 'Notes' : 'Anmerkungen'}</div>
+    <p class="section-desc">${isEN ? 'Allergies, dietary requirements, special needs.' : 'Allergien, Diätwünsche, besondere Bedürfnisse.'}</p>
+    <textarea class="text-input" id="notes" rows="3" placeholder="${isEN ? 'Dietary requirements, allergies, ...' : 'Allergien, Ernährungswünsche, ...'}"></textarea>
+  </div>`;
+
+  card.innerHTML = html;
 }
-function setAttendance(val) {
-  state.attendance = val;
-  document.querySelectorAll('.attend-btn').forEach(b=>b.classList.remove('selected'));
-  document.querySelector(`.attend-btn.${val}`).classList.add('selected');
-  document.getElementById('attendingSection').classList.toggle('hidden', val!=='yes');
-  applyFormType(); // re-apply every time section opens
+
+function attendSection(id, titleHtml, stateKey) {
+  const isEN = document.body.classList.contains('en');
+  const num = formType === '1' ? '01' : (id === 'p1' ? '01' : '02');
+  return `
+  <div class="form-section">
+    <div class="section-label">${num}</div>
+    <div class="section-title">${titleHtml}</div>
+    <div class="attend-toggle">
+      <button class="attend-btn yes" onclick="setAttend('${stateKey}', 'yes', this)">
+        <span class="icon">&#127754;</span>
+        <span class="label">${isEN ? "Yes, I'll be there!" : 'Ja, ich bin dabei!'}</span>
+      </button>
+      <button class="attend-btn no" onclick="setAttend('${stateKey}', 'no', this)">
+        <span class="icon">&#9825;</span>
+        <span class="label">${isEN ? "Sadly can't make it" : 'Leider nicht möglich'}</span>
+      </button>
+    </div>
+  </div>`;
+}
+
+// ── Interaction ────────────────────────────────────────────────
+function setAttend(key, val, btn) {
+  state[key] = val;
+  // Deselect sibling buttons in the same section
+  const section = btn.closest('.form-section');
+  section.querySelectorAll('.attend-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
   updateSubmitBtn();
 }
-function setCompanion(val) {
-  state.companion = val;
-  document.getElementById('companionYes').classList.toggle('selected', val==='yes');
-  document.getElementById('companionNo').classList.toggle('selected', val==='no');
-  document.getElementById('companionFields').classList.toggle('hidden', val!=='yes');
-  updateSubmitBtn();
-}
+
 function setChildren(val) {
   state.children = val;
-  document.getElementById('childrenYes').classList.toggle('selected', val==='yes');
-  document.getElementById('childrenNo').classList.toggle('selected', val==='no');
+  document.getElementById('childrenYes').classList.toggle('selected', val === 'yes');
+  document.getElementById('childrenNo').classList.toggle('selected', val === 'no');
   const fields = document.getElementById('childrenFields');
-  if (val==='yes') { fields.classList.remove('hidden'); if (state.childCount===0) addChild(); }
-  else fields.classList.add('hidden');
+  if (val === 'yes') {
+    fields.classList.remove('hidden');
+    if (state.childCount === 0) addChild();
+  } else {
+    fields.classList.add('hidden');
+  }
   updateSubmitBtn();
 }
+
 function addChild() {
   state.childCount++;
   const isEN = document.body.classList.contains('en');
   const row = document.createElement('div');
   row.className = 'child-row';
-  row.innerHTML = `<input type="text" placeholder="Name" class="child-name"><input type="number" placeholder="${isEN?'Age':'Alter'}" min="0" max="17" class="age-input child-age"><button class="remove-child" onclick="removeChild(this)">×</button>`;
+  row.innerHTML = `<input type="text" placeholder="Name" class="child-name"><input type="number" placeholder="${isEN ? 'Age' : 'Alter'}" min="0" max="17" class="age-input child-age"><button class="remove-child" onclick="removeChild(this)">&#215;</button>`;
   document.getElementById('childrenList').appendChild(row);
 }
+
 function removeChild(btn) {
   btn.closest('.child-row').remove();
-  if (!document.querySelectorAll('.child-row').length) state.childCount=0;
+  if (!document.querySelectorAll('.child-row').length) state.childCount = 0;
 }
+
 function updateSubmitBtn() {
-  let ready = state.attendance !== null;
-  if (state.attendance === 'yes') {
-    if (formType >= 2) ready = ready && state.companion !== null;
-    if (formType >= 3) ready = ready && state.children !== null;
-  }
+  let ready = state.p1 !== null;
+  if (formType === '2' || formType === '3') ready = ready && state.p2 !== null;
+  if (formType === '3') ready = ready && state.children !== null;
   document.getElementById('submitBtn').disabled = !ready;
 }
+
+// ── Language ───────────────────────────────────────────────────
+function setLang(l) {
+  document.body.classList.toggle('en', l === 'en');
+  document.querySelectorAll('.lang-btn').forEach((b, i) =>
+    b.classList.toggle('active', (i === 0 && l === 'de') || (i === 1 && l === 'en'))
+  );
+  localStorage.setItem('wedding_lang', l);
+  buildGreeting();
+  buildForm(); // rebuild with new language
+}
+
+// ── Submit ─────────────────────────────────────────────────────
 async function submitForm() {
   const btn = document.getElementById('submitBtn');
   const isEN = document.body.classList.contains('en');
   btn.disabled = true;
   btn.textContent = isEN ? 'Sending...' : 'Wird gesendet...';
+
   const children = [];
   document.querySelectorAll('.child-row').forEach(row => {
     const name = row.querySelector('.child-name')?.value?.trim();
-    const age = row.querySelector('.child-age')?.value?.trim();
-    if (name) children.push({ name, age: age||'?' });
+    const age  = row.querySelector('.child-age')?.value?.trim();
+    if (name) children.push({ name, age: age || '?' });
   });
+
+  // Build a readable attending summary
+  let attendingSummary = '';
+  if (formType === '1') {
+    attendingSummary = state.p1 === 'yes' ? (isEN ? 'Yes' : 'Ja') : (isEN ? 'No' : 'Nein');
+  } else {
+    const y = isEN ? 'Yes' : 'Ja';
+    const n = isEN ? 'No' : 'Nein';
+    attendingSummary = `${guestName}: ${state.p1 === 'yes' ? y : n} / ${guestPartner}: ${state.p2 === 'yes' ? y : n}`;
+  }
+
+  const anyAttending = state.p1 === 'yes' || state.p2 === 'yes';
+
   const payload = {
-    code: guestCode, guestName, language: isEN?'EN':'DE',
-    attending: state.attendance==='yes' ? (isEN?'Yes':'Ja') : (isEN?'No':'Nein'),
-    companion: state.attendance==='yes' ? (state.companion==='yes' ? (document.getElementById('companionName').value.trim()||(isEN?'Yes':'Ja')) : (isEN?'No':'Nein')) : '—',
-    childrenCount: state.attendance==='yes' && state.children==='yes' ? children.length : 0,
-    childrenDetails: children.length>0 ? children.map(c=>`${c.name} (${c.age})`).join(', ') : '—',
-    notes: document.getElementById('notes').value.trim()||'—',
+    code:            guestCode,
+    guestName:       formType === '1' ? guestName : `${guestName} & ${guestPartner}`,
+    language:        isEN ? 'EN' : 'DE',
+    attending:       attendingSummary,
+    companion:       formType === '1' ? '—' : `${guestName} & ${guestPartner}`,
+    childrenCount:   formType === '3' && state.children === 'yes' ? children.length : 0,
+    childrenDetails: children.length > 0 ? children.map(c => `${c.name} (${c.age})`).join(', ') : '—',
+    notes:           document.getElementById('notes').value.trim() || '—',
   };
+
   try {
     await window._submitToFirebase(payload);
-    if (state.attendance==='yes') {
-      document.getElementById('successMsg').textContent = isEN ? `We can't wait to celebrate with you, ${guestName}!` : `Wir freuen uns riesig mit euch zu feiern, ${guestName}!`;
+    if (anyAttending) {
+      const names = formType === '1' ? guestName : `${guestName} & ${guestPartner}`;
+      document.getElementById('successMsg').textContent = isEN
+        ? `We can't wait to celebrate with you, ${names}!`
+        : `Wir freuen uns riesig mit euch zu feiern, ${names}!`;
       document.getElementById('successOverlay').classList.add('show');
     } else {
       document.getElementById('declineOverlay').classList.add('show');
     }
   } catch(e) {
-    btn.disabled=false;
-    btn.textContent = isEN?'Send response →':'Antwort absenden →';
-    alert(isEN?'Something went wrong. Please try again.':'Etwas ist schiefgelaufen. Bitte nochmal versuchen.');
+    btn.disabled = false;
+    btn.textContent = isEN ? 'Send response' : 'Antwort absenden';
+    alert(isEN ? 'Something went wrong. Please try again.' : 'Etwas ist schiefgelaufen. Bitte nochmal versuchen.');
   }
 }
 </script>

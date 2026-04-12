@@ -120,12 +120,14 @@ function checkCode() {
 
   const entry = window.GUEST_CODES[code];
   if (entry) {
-    const guestName = typeof entry === 'object' ? entry.name : entry;
-    const formType  = typeof entry === 'object' ? (entry.type || '3') : '3';
-    sessionStorage.setItem('wedding_code', code);
-    sessionStorage.setItem('wedding_guest', guestName);
-    sessionStorage.setItem('wedding_type', formType);
-    sessionStorage.setItem('wedding_lang', isEN ? 'en' : 'de');
+    const guestName = entry.name    || entry;
+    const formType  = entry.type    || '1';
+    const partner   = entry.partner || '';
+    sessionStorage.setItem('wedding_code',    code);
+    sessionStorage.setItem('wedding_guest',   guestName);
+    sessionStorage.setItem('wedding_type',    formType);
+    sessionStorage.setItem('wedding_partner', partner);
+    sessionStorage.setItem('wedding_lang',    isEN ? 'en' : 'de');
     window.location.href = 'form.html';
   } else {
     inp.classList.add('error');
@@ -159,7 +161,11 @@ if (savedLang === 'en') setLang('en');
     const snapshot = await getDocs(collection(db, 'codes'));
     const codes = {};
     snapshot.forEach(doc => {
-      codes[doc.id] = { name: doc.data().name || doc.id, type: doc.data().type || '3' };
+      codes[doc.id] = {
+        name:    doc.data().name    || doc.id,
+        type:    doc.data().type    || '1',
+        partner: doc.data().partner || '',
+      };
     });
     window.GUEST_CODES = codes;
   } catch(e) {

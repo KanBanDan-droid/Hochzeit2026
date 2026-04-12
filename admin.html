@@ -216,13 +216,16 @@
         <div class="add-code-form" style="flex-direction:column;gap:.75rem">
           <div style="display:flex;gap:.5rem;flex-wrap:wrap">
             <input class="code-input-field code-field" id="newCode" type="text" maxlength="12" placeholder="CODE01" autocapitalize="characters" autocorrect="off" spellcheck="false">
-            <input class="code-input-field" id="newName" type="text" placeholder="Name / Familie" style="min-width:130px">
+            <input class="code-input-field" id="newName" type="text" placeholder="Name (z.B. Alice)" style="min-width:130px">
+          </div>
+          <div id="partnerNameRow" style="display:none">
+            <input class="code-input-field" id="newPartner" type="text" placeholder="Name Partner (z.B. Daniel)" style="width:100%">
           </div>
           <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap">
-            <select id="newType" style="flex:1;padding:.55rem .75rem;font-family:'DM Sans',sans-serif;font-size:.78rem;border:1px solid var(--border);background:var(--white);color:var(--ink);border-radius:2px;outline:none;cursor:pointer">
-              <option value="1">Nur Zusage + Anmerkungen (Fragen 1 & 4)</option>
-              <option value="2">Zusage + Begleitung + Anmerkungen (Fragen 1, 2 & 4)</option>
-              <option value="3" selected>Alle Fragen (1, 2, 3 & 4)</option>
+            <select id="newType" onchange="onTypeChange()" style="flex:1;padding:.55rem .75rem;font-family:'DM Sans',sans-serif;font-size:.78rem;border:1px solid var(--border);background:var(--white);color:var(--ink);border-radius:2px;outline:none;cursor:pointer">
+              <option value="1">Einzelperson — nur Zusage + Anmerkungen</option>
+              <option value="2">Paar — individuelle Zusage für jede Person</option>
+              <option value="3" selected>Paar mit Kindern — Zusage + Kinder + Anmerkungen</option>
             </select>
             <button class="btn btn-primary" onclick="addCode()" style="white-space:nowrap">+ Hinzufügen</button>
           </div>
@@ -231,11 +234,10 @@
       <div class="codes-card">
         <div class="codes-card-header"><span class="codes-card-title">Bulk Import</span></div>
         <div style="padding:1.25rem">
-          <textarea class="bulk-area" id="bulkInput" placeholder="CODE01, Familie Mayer, 3&#10;CODE02, Familie Huber, 2&#10;CODE03, Max Mustermann, 1"></textarea>
+          <textarea class="bulk-area" id="bulkInput" placeholder="CODE01, Alice, 1&#10;CODE02, Alice, Daniel, 2&#10;CODE03, Bob, Sarah, 3"></textarea>
           <p style="font-size:0.7rem;color:var(--ink-soft);margin-top:.5rem;line-height:1.7">
-            Format: <code style="font-family:monospace">CODE, Name, Typ</code><br>
-            Typ: <strong>1</strong> = nur Zusage, <strong>2</strong> = Zusage + Begleitung, <strong>3</strong> = alle Fragen<br>
-            Kein Typ angegeben → Typ 3 (alle Fragen)
+            Format: <code style="font-family:monospace">CODE, Name1, Typ</code> oder <code style="font-family:monospace">CODE, Name1, Name2, Typ</code><br>
+            Typ: <strong>1</strong> = Einzelperson, <strong>2</strong> = Paar, <strong>3</strong> = Paar mit Kindern
           </p>
           <div style="margin-top:.75rem;display:flex;gap:.5rem">
             <button class="btn btn-primary" onclick="bulkImport()" style="flex:1">Importieren</button>
@@ -322,8 +324,11 @@ service cloud.firestore {
       (snapshot) => {
         const codes = {};
         snapshot.forEach(d => {
-          // Store full object: { name, type }
-          codes[d.id] = { name: d.data().name || d.id, type: d.data().type || '3' };
+          codes[d.id] = {
+            name:    d.data().name    || d.id,
+            type:    d.data().type    || '1',
+            partner: d.data().partner || '',
+          };
         });
         window._onCodesData(codes);
       },
@@ -335,8 +340,10 @@ service cloud.firestore {
     await deleteDoc(doc(db, 'rsvps', id));
   };
 
-  window._saveCode = async (code, name, type) => {
-    await setDoc(doc(db, 'codes', code), { name, type: type || '3' });
+  window._saveCode = async (code, name, type, partner) => {
+    const data = { name, type: type || '1' };
+    if (partner) data.partner = partner;
+    await setDoc(doc(db, 'codes', code), data);
   };
 
   window._deleteCode = async (code) => {
@@ -535,10 +542,17 @@ function downloadCSV() {
 
 // ── Codes ──────────────────────────────────────────────────────
 const TYPE_LABELS = {
-  '1': 'Nur Zusage',
-  '2': '+ Begleitung',
-  '3': 'Alle Fragen',
+  '1': 'Einzelperson',
+  '2': 'Paar',
+  '3': 'Paar + Kinder',
 };
+
+function onTypeChange() {
+  const type = document.getElementById('newType').value;
+  document.getElementById('partnerNameRow').style.display = type === '1' ? 'none' : '';
+  document.getElementById('newPartner').placeholder =
+    type === '3' ? 'Name Partner (z.B. Daniel)' : 'Name Partner (z.B. Daniel)';
+}
 
 function renderCodesList() {
   const rsvped = new Set(allData.map(r=>r.code));
@@ -550,14 +564,16 @@ function renderCodesList() {
     return;
   }
   list.innerHTML = keys.map(code => {
-    const entry = codesData[code]; // { name, type } or legacy string
-    const name = typeof entry === 'object' ? entry.name : entry;
-    const type = typeof entry === 'object' ? (entry.type || '3') : '3';
-    const typeLabel = TYPE_LABELS[type] || 'Alle Fragen';
+    const entry = codesData[code];
+    const name    = entry.name    || entry;
+    const partner = entry.partner || '';
+    const type    = entry.type    || '1';
+    const typeLabel = TYPE_LABELS[type] || 'Einzelperson';
+    const displayName = partner ? `${name} & ${partner}` : name;
     return `
     <div class="code-row fade-in">
       <span class="code-pill">${code}</span>
-      <span class="code-name">${name} <span style="font-size:.68rem;color:var(--ink-faint);font-weight:400">${typeLabel}</span></span>
+      <span class="code-name">${displayName} <span style="font-size:.68rem;color:var(--ink-faint);font-weight:400">${typeLabel}</span></span>
       <div class="code-actions">
         <span class="${rsvped.has(code)?'badge-done':'badge-pending'}">${rsvped.has(code)?'✓ RSVP':'ausstehend'}</span>
         <button class="delete-code-btn" onclick="deleteCode('${code}')" title="Löschen">×</button>
@@ -567,25 +583,29 @@ function renderCodesList() {
 }
 
 async function addCode() {
-  const cEl=document.getElementById('newCode'), nEl=document.getElementById('newName');
-  const code=cEl.value.trim().toUpperCase().replace(/\s+/g,'');
-  const name=nEl.value.trim();
-  const type=document.getElementById('newType').value;
-  if (!code||!name) {
-    if (!code) cEl.style.borderColor='var(--red)';
-    if (!name) nEl.style.borderColor='var(--red)';
-    setTimeout(()=>{cEl.style.borderColor='';nEl.style.borderColor='';}, 1200);
-    return;
-  }
+  const cEl = document.getElementById('newCode');
+  const nEl = document.getElementById('newName');
+  const pEl = document.getElementById('newPartner');
+  const type = document.getElementById('newType').value;
+  const code = cEl.value.trim().toUpperCase().replace(/\s+/g,'');
+  const name = nEl.value.trim();
+  const partner = type !== '1' ? pEl.value.trim() : '';
+
+  let valid = true;
+  if (!code) { cEl.style.borderColor='var(--red)'; valid=false; }
+  if (!name) { nEl.style.borderColor='var(--red)'; valid=false; }
+  if (type !== '1' && !partner) { pEl.style.borderColor='var(--red)'; valid=false; }
+  if (!valid) { setTimeout(()=>{ cEl.style.borderColor=''; nEl.style.borderColor=''; pEl.style.borderColor=''; }, 1200); return; }
+
   try {
-    await window._saveCode(code, name, type);
-    cEl.value=''; nEl.value='';
+    await window._saveCode(code, name, type, partner);
+    cEl.value=''; nEl.value=''; pEl.value='';
   } catch(e) { alert('Speichern fehlgeschlagen: ' + e.message); }
 }
 
 async function deleteCode(code) {
   const entry = codesData[code];
-  const name = typeof entry === 'object' ? entry.name : entry;
+  const name = entry.name || entry;
   if (!confirm(`Code „${code}" (${name}) löschen?`)) return;
   try {
     await window._deleteCode(code);
@@ -593,22 +613,27 @@ async function deleteCode(code) {
 }
 
 async function bulkImport() {
-  const raw=document.getElementById('bulkInput').value.trim();
+  const raw = document.getElementById('bulkInput').value.trim();
   if (!raw) return;
   let added=0, skipped=0;
-  const lines=raw.split('\n').map(l=>l.trim()).filter(Boolean);
+  const lines = raw.split('\n').map(l=>l.trim()).filter(Boolean);
   for (const line of lines) {
-    const parts=line.split(/[,\t]/).map(p=>p.trim());
-    if (parts.length>=2) {
-      const code=parts[0].toUpperCase().replace(/\s+/g,'');
-      const name=parts[1].trim();
-      const type=['1','2','3'].includes(parts[2]) ? parts[2] : '3';
-      if (code&&name) { try { await window._saveCode(code,name,type); added++; } catch(e) { skipped++; } }
-      else skipped++;
-    } else skipped++;
+    const parts = line.split(/[,\t]/).map(p=>p.trim());
+    const code = parts[0]?.toUpperCase().replace(/\s+/g,'');
+    if (!code || parts.length < 2) { skipped++; continue; }
+    // Detect: CODE, Name, Type  OR  CODE, Name1, Name2, Type
+    const lastPart = parts[parts.length - 1];
+    const hasType = ['1','2','3'].includes(lastPart);
+    const type = hasType ? lastPart : '1';
+    const nameparts = hasType ? parts.slice(1, -1) : parts.slice(1);
+    const name = nameparts[0]?.trim();
+    const partner = nameparts[1]?.trim() || '';
+    if (!name) { skipped++; continue; }
+    try { await window._saveCode(code, name, type, partner); added++; }
+    catch(e) { skipped++; }
   }
-  document.getElementById('bulkResult').textContent=`${added} hinzugefügt${skipped>0?`, ${skipped} übersprungen`:''}`;
-  document.getElementById('bulkInput').value='';
+  document.getElementById('bulkResult').textContent = `${added} hinzugefügt${skipped>0?`, ${skipped} übersprungen`:''}`;
+  document.getElementById('bulkInput').value = '';
 }
 
 function flashBanner(id) { const el=document.getElementById(id); el.style.display='block'; setTimeout(()=>el.style.display='none',3500); }
