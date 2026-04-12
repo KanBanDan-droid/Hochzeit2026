@@ -3,16 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Adrian & Silvi · 7. August 2026</title>
+<title>Adrian &amp; Silvi · 7. August 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --ink: #1a1a1a; --ink-soft: #6b6b6b; --ink-faint: #b8b8b8;
-    --paper: #f9f7f4; --white: #ffffff; --accent: #c8a96e;
-    --border: rgba(26,26,26,0.1);
-  }
+  :root { --ink: #1a1a1a; --ink-soft: #6b6b6b; --ink-faint: #b8b8b8; --paper: #f9f7f4; --white: #ffffff; --accent: #c8a96e; --border: rgba(26,26,26,0.1); }
   html, body { height: 100%; background: var(--paper); color: var(--ink); font-family: 'DM Sans', sans-serif; font-weight: 300; }
   body { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem; }
   body::before { content: ''; position: fixed; inset: 0; background-image: linear-gradient(rgba(26,26,26,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(26,26,26,0.03) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; z-index: 0; }
@@ -34,15 +30,15 @@
   .code-input { width: 100%; padding: 0.9rem 1rem; font-family: 'DM Sans', sans-serif; font-size: 1.1rem; font-weight: 400; letter-spacing: 0.15em; text-align: center; text-transform: uppercase; border: 1px solid var(--border); background: var(--paper); color: var(--ink); border-radius: 2px; outline: none; transition: border-color 0.2s; }
   .code-input:focus { border-color: var(--ink); }
   .code-input.error { border-color: #c0392b; animation: shake 0.3s ease; }
-  .code-input:disabled { opacity: 0.5; }
+  .code-input:disabled { opacity: 0.4; }
   .error-msg { font-size: 0.75rem; color: #c0392b; margin-top: 0.5rem; min-height: 1.1rem; text-align: left; }
   .submit-btn { width: 100%; padding: 0.9rem; font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; background: var(--ink); color: var(--white); border: none; border-radius: 2px; cursor: pointer; transition: opacity 0.2s; margin-top: 0.5rem; }
   .submit-btn:hover { opacity: 0.8; }
   .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-  .footer-note { margin-top: 2rem; font-size: 0.72rem; color: var(--ink-faint); opacity: 0; animation: fadeUp 0.8s ease 0.5s forwards; }
   .loading-hint { font-size: 0.72rem; color: var(--ink-faint); margin-top: 0.5rem; min-height: 1rem; }
-  @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
-  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+  .footer-note { margin-top: 2rem; font-size: 0.72rem; color: var(--ink-faint); opacity: 0; animation: fadeUp 0.8s ease 0.5s forwards; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
   [data-lang="en"] { display: none; }
   body.en [data-lang="de"] { display: none; }
   body.en [data-lang="en"] { display: block; }
@@ -73,14 +69,14 @@
     <div class="input-group">
       <input class="code-input" id="codeInput" type="text" maxlength="12"
         autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false"
-        placeholder="XXXXX"
+        placeholder="XXXXX" disabled
         onkeydown="if(event.key==='Enter') checkCode()"
         oninput="clearError()">
       <div class="error-msg" id="errorMsg"></div>
     </div>
-    <button class="submit-btn" id="submitBtn" onclick="checkCode()">
-      <span data-lang="de">Weiter →</span>
-      <span data-lang="en">Continue →</span>
+    <button class="submit-btn" id="submitBtn" onclick="checkCode()" disabled>
+      <span data-lang="de">Weiter</span>
+      <span data-lang="en">Continue</span>
     </button>
     <div class="loading-hint" id="loadingHint">
       <span data-lang="de">Wird geladen…</span>
@@ -88,53 +84,20 @@
     </div>
   </div>
   <p class="footer-note">
-    <span data-lang="de">Fragen? Schreibt uns unter</span>
-    <span data-lang="en">Questions? Write us at</span>
-    hello@adrianundsilvi.de
+    <span data-lang="de">Fragen? Schreibt uns.</span>
+    <span data-lang="en">Questions? Write us.</span>
   </p>
 </div>
 
-<!-- Firebase — loads codes into window.GUEST_CODES -->
-<script type="module">
-  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-  import { getFirestore, collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
-
-  const app = initializeApp({
-    apiKey: "AIzaSyDyU8mx1XEO-OqOxwco--XKa7aG1E70czs",
-    authDomain: "adrian-silvi-hochzeit.firebaseapp.com",
-    projectId: "adrian-silvi-hochzeit",
-    storageBucket: "adrian-silvi-hochzeit.firebasestorage.app",
-    messagingSenderId: "442648885057",
-    appId: "1:442648885057:web:22d7408a442c5a99e3d3c0"
-  });
-  const db = getFirestore(app);
-
-  try {
-    const snapshot = await getDocs(collection(db, 'codes'));
-    const codes = {};
-    snapshot.forEach(doc => {
-      codes[doc.id] = { name: doc.data().name || doc.id, type: doc.data().type || '3' };
-    });
-    window.GUEST_CODES = codes;
-  } catch(e) {
-    console.warn('Could not load codes from Firestore:', e);
-    window.GUEST_CODES = {};
-  }
-
-  // Unlock the form once codes are loaded
-  document.getElementById('codeInput').disabled = false;
-  document.getElementById('submitBtn').disabled = false;
-  document.getElementById('loadingHint').style.display = 'none';
-</script>
-
+<!-- Normal script first — defines global functions for onclick handlers -->
 <script>
-// GUEST_CODES is populated by the Firebase module above.
-// Fallback: empty object until loaded.
-window.GUEST_CODES = window.GUEST_CODES || {};
+window.GUEST_CODES = {};
 
 function setLang(l) {
-  document.body.classList.toggle('en', l==='en');
-  document.querySelectorAll('.lang-btn').forEach((b,i) => b.classList.toggle('active',(i===0&&l==='de')||(i===1&&l==='en')));
+  document.body.classList.toggle('en', l === 'en');
+  document.querySelectorAll('.lang-btn').forEach((b, i) =>
+    b.classList.toggle('active', (i === 0 && l === 'de') || (i === 1 && l === 'en'))
+  );
   localStorage.setItem('wedding_lang', l);
 }
 
@@ -172,5 +135,40 @@ function checkCode() {
   }
 }
 
-// Restore language
-const savedLang = localStorage.getItem('wedd
+// Restore language preference
+const savedLang = localStorage.getItem('wedding_lang');
+if (savedLang === 'en') setLang('en');
+</script>
+
+<!-- Firebase module — loads codes, then unlocks the form -->
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+  import { getFirestore, collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+  const app = initializeApp({
+    apiKey: "AIzaSyDyU8mx1XEO-OqOxwco--XKa7aG1E70czs",
+    authDomain: "adrian-silvi-hochzeit.firebaseapp.com",
+    projectId: "adrian-silvi-hochzeit",
+    storageBucket: "adrian-silvi-hochzeit.firebasestorage.app",
+    messagingSenderId: "442648885057",
+    appId: "1:442648885057:web:22d7408a442c5a99e3d3c0"
+  });
+  const db = getFirestore(app);
+
+  try {
+    const snapshot = await getDocs(collection(db, 'codes'));
+    const codes = {};
+    snapshot.forEach(doc => {
+      codes[doc.id] = { name: doc.data().name || doc.id, type: doc.data().type || '3' };
+    });
+    window.GUEST_CODES = codes;
+  } catch(e) {
+    console.warn('Could not load codes from Firestore:', e);
+  }
+
+  document.getElementById('codeInput').disabled = false;
+  document.getElementById('submitBtn').disabled = false;
+  document.getElementById('loadingHint').style.display = 'none';
+</script>
+</body>
+</html>
