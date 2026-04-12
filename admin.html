@@ -8,328 +8,125 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
-    --ink: #1a1a1a;
-    --ink-soft: #6b6b6b;
-    --ink-faint: #c0c0c0;
-    --paper: #f9f7f4;
-    --white: #ffffff;
-    --accent: #c8a96e;
-    --green: #2d7a4f;
-    --green-light: #e8f5ee;
-    --red: #c0392b;
-    --red-light: #fdecea;
+    --ink: #1a1a1a; --ink-soft: #6b6b6b; --ink-faint: #c0c0c0;
+    --paper: #f9f7f4; --white: #ffffff; --accent: #c8a96e;
+    --green: #2d7a4f; --green-light: #e8f5ee;
+    --red: #c0392b; --red-light: #fdecea;
+    --amber: #8a5700; --amber-light: #fff8e1;
     --border: rgba(26,26,26,0.1);
   }
+  html, body { background: var(--paper); color: var(--ink); font-family: 'DM Sans', sans-serif; font-weight: 300; min-height: 100vh; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: linear-gradient(rgba(26,26,26,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(26,26,26,0.03) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; z-index: 0; }
 
-  html, body {
-    background: var(--paper);
-    color: var(--ink);
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 300;
-    min-height: 100vh;
-  }
-
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(26,26,26,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(26,26,26,0.03) 1px, transparent 1px);
-    background-size: 60px 60px;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  /* Login screen */
-  .login-screen {
-    position: fixed;
-    inset: 0;
-    z-index: 50;
-    background: var(--paper);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-  }
-
-  .login-card {
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 2.5rem 2rem;
-    width: 100%;
-    max-width: 360px;
-    text-align: center;
-  }
-
-  .login-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.6rem;
-    font-weight: 300;
-    margin-bottom: 0.3rem;
-  }
-
-  .login-sub {
-    font-size: 0.78rem;
-    color: var(--ink-soft);
-    margin-bottom: 1.75rem;
-  }
-
-  .pw-input {
-    width: 100%;
-    padding: 0.8rem 1rem;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.9rem;
-    border: 1px solid var(--border);
-    background: var(--paper);
-    color: var(--ink);
-    border-radius: 2px;
-    outline: none;
-    text-align: center;
-    letter-spacing: 0.05em;
-    margin-bottom: 0.75rem;
-    transition: border-color 0.2s;
-  }
+  /* Login */
+  .login-screen { position: fixed; inset: 0; z-index: 50; background: var(--paper); display: flex; align-items: center; justify-content: center; padding: 2rem; }
+  .login-card { background: var(--white); border: 1px solid var(--border); border-radius: 4px; padding: 2.5rem 2rem; width: 100%; max-width: 360px; text-align: center; }
+  .login-title { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 300; margin-bottom: 0.3rem; }
+  .login-sub { font-size: 0.78rem; color: var(--ink-soft); margin-bottom: 1.75rem; }
+  .pw-input { width: 100%; padding: 0.8rem 1rem; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; border: 1px solid var(--border); background: var(--paper); color: var(--ink); border-radius: 2px; outline: none; text-align: center; letter-spacing: 0.05em; margin-bottom: 0.75rem; transition: border-color 0.2s; }
   .pw-input:focus { border-color: var(--ink); }
-  .pw-input.error { border-color: var(--red); }
-
-  .login-btn {
-    width: 100%;
-    padding: 0.8rem;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    background: var(--ink);
-    color: var(--white);
-    border: none;
-    border-radius: 2px;
-    cursor: pointer;
-    transition: opacity 0.2s;
-  }
+  .pw-input.shake { animation: shake 0.3s ease; border-color: var(--red); }
+  .login-btn { width: 100%; padding: 0.8rem; font-family: 'DM Sans', sans-serif; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; background: var(--ink); color: var(--white); border: none; border-radius: 2px; cursor: pointer; transition: opacity 0.2s; }
   .login-btn:hover { opacity: 0.8; }
+  .login-error { font-size: 0.73rem; color: var(--red); margin-top: 0.5rem; min-height: 1rem; }
 
-  .login-error {
-    font-size: 0.73rem;
-    color: var(--red);
-    margin-top: 0.5rem;
-    min-height: 1rem;
-  }
-
-  /* Main app */
-  .app {
-    position: relative;
-    z-index: 1;
-    display: none;
-    padding: 3rem 1.5rem;
-    max-width: 1100px;
-    margin: 0 auto;
-  }
+  /* App */
+  .app { position: relative; z-index: 1; display: none; max-width: 1100px; margin: 0 auto; padding: 0 1.5rem 4rem; }
   .app.visible { display: block; }
 
-  .app-header {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    margin-bottom: 2.5rem;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
+  /* Tabs */
+  .tab-nav { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 2.5rem; position: sticky; top: 0; background: var(--paper); z-index: 10; padding-top: 2rem; }
+  .tab-btn { padding: 0.75rem 1.25rem; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; border: none; background: transparent; color: var(--ink-soft); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.15s; }
+  .tab-btn.active { color: var(--ink); border-bottom-color: var(--ink); }
+  .tab-btn:hover:not(.active) { color: var(--ink); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
 
-  .app-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 2rem;
-    font-weight: 300;
-  }
+  /* Panel header */
+  .panel-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+  .panel-title { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 300; }
+  .panel-title small { display: block; font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.3rem; }
+  .header-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 
-  .app-title small {
-    display: block;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 0.3rem;
-  }
-
-  .header-actions {
-    display: flex;
-    gap: 0.5rem;
-  }
-
-  .btn {
-    padding: 0.6rem 1.2rem;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    border-radius: 2px;
-    cursor: pointer;
-    transition: all 0.15s;
-    border: 1px solid var(--border);
-    background: var(--white);
-    color: var(--ink);
-  }
+  /* Buttons */
+  .btn { padding: 0.6rem 1.2rem; font-family: 'DM Sans', sans-serif; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.08em; border-radius: 2px; cursor: pointer; transition: all 0.15s; border: 1px solid var(--border); background: var(--white); color: var(--ink); }
   .btn:hover { border-color: var(--ink); }
-
-  .btn-primary {
-    background: var(--ink);
-    color: var(--white);
-    border-color: var(--ink);
-  }
+  .btn-primary { background: var(--ink); color: var(--white); border-color: var(--ink); }
   .btn-primary:hover { opacity: 0.8; }
 
-  /* Stats row */
-  .stats-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 1rem;
-    margin-bottom: 2rem;
-  }
+  /* Banners */
+  .banner { border-radius: 3px; padding: 0.75rem 1rem; font-size: 0.78rem; margin-bottom: 1.5rem; line-height: 1.5; }
+  .banner code { font-family: monospace; background: rgba(0,0,0,0.07); padding: 1px 5px; border-radius: 2px; font-size: 0.85em; }
+  .banner-warning { background: var(--amber-light); border: 1px solid #e0c040; color: var(--amber); }
+  .banner-success { background: var(--green-light); border: 1px solid #7ecfa4; color: var(--green); }
+  .banner-error { background: var(--red-light); border: 1px solid #e08080; color: var(--red); }
 
-  .stat-card {
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 1.25rem 1.5rem;
-  }
-
-  .stat-num {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 2.5rem;
-    font-weight: 300;
-    line-height: 1;
-    margin-bottom: 0.25rem;
-  }
-
-  .stat-label {
-    font-size: 0.72rem;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
-  }
-
+  /* Stats */
+  .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+  .stat-card { background: var(--white); border: 1px solid var(--border); border-radius: 4px; padding: 1.25rem 1.5rem; }
+  .stat-num { font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; font-weight: 300; line-height: 1; margin-bottom: 0.25rem; }
+  .stat-label { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); }
   .stat-card.attending .stat-num { color: var(--green); }
   .stat-card.declining .stat-num { color: var(--red); }
 
-  /* Filter bar */
-  .filter-bar {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
-  }
-
-  .filter-btn {
-    padding: 0.4rem 0.9rem;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.72rem;
-    font-weight: 500;
-    letter-spacing: 0.05em;
-    border: 1px solid var(--border);
-    background: var(--white);
-    color: var(--ink-soft);
-    border-radius: 2px;
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-  .filter-btn.active {
-    background: var(--ink);
-    color: var(--white);
-    border-color: var(--ink);
-  }
+  /* Filter */
+  .filter-bar { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+  .filter-btn { padding: 0.4rem 0.9rem; font-family: 'DM Sans', sans-serif; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.05em; border: 1px solid var(--border); background: var(--white); color: var(--ink-soft); border-radius: 2px; cursor: pointer; transition: all 0.15s; }
+  .filter-btn.active { background: var(--ink); color: var(--white); border-color: var(--ink); }
 
   /* Table */
-  .table-wrap {
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    overflow-x: auto;
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.82rem;
-  }
-
-  thead th {
-    padding: 0.75rem 1rem;
-    text-align: left;
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
-    border-bottom: 1px solid var(--border);
-    white-space: nowrap;
-  }
-
-  tbody tr {
-    border-bottom: 1px solid var(--border);
-    transition: background 0.1s;
-  }
+  .table-wrap { background: var(--white); border: 1px solid var(--border); border-radius: 4px; overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  thead th { padding: 0.75rem 1rem; text-align: left; font-size: 10px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-faint); border-bottom: 1px solid var(--border); white-space: nowrap; }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
   tbody tr:last-child { border-bottom: none; }
   tbody tr:hover { background: var(--paper); }
-
-  td {
-    padding: 0.85rem 1rem;
-    vertical-align: middle;
-    color: var(--ink);
-  }
-
-  .badge {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 2px;
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.05em;
-  }
-
+  td { padding: 0.85rem 1rem; vertical-align: middle; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 2px; font-size: 0.7rem; font-weight: 500; letter-spacing: 0.05em; }
   .badge-yes { background: var(--green-light); color: var(--green); }
   .badge-no { background: var(--red-light); color: var(--red); }
-
   .td-muted { color: var(--ink-soft); }
   .td-mono { font-size: 0.75rem; letter-spacing: 0.08em; color: var(--ink-soft); }
+  .state-msg { padding: 3rem; text-align: center; color: var(--ink-soft); font-size: 0.85rem; }
 
-  .empty-state {
-    padding: 3rem;
-    text-align: center;
-    color: var(--ink-soft);
-  }
+  /* Codes panel */
+  .codes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  @media(max-width: 640px) { .codes-grid { grid-template-columns: 1fr; } }
+  .codes-card { background: var(--white); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+  .codes-card-header { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap; }
+  .codes-card-title { font-size: 10px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-soft); }
+  .codes-list { max-height: 380px; overflow-y: auto; }
+  .code-row { display: grid; grid-template-columns: auto 1fr auto; gap: 0.75rem; align-items: center; padding: 0.65rem 1.25rem; border-bottom: 1px solid var(--border); transition: background 0.1s; }
+  .code-row:last-child { border-bottom: none; }
+  .code-row:hover { background: var(--paper); }
+  .code-pill { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.12em; font-family: monospace; background: var(--paper); border: 1px solid var(--border); padding: 3px 8px; border-radius: 2px; white-space: nowrap; }
+  .code-name { font-size: 0.82rem; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .code-actions { display: flex; align-items: center; gap: 0.4rem; }
+  .badge-pending { background: var(--amber-light); color: var(--amber); padding: 2px 7px; border-radius: 2px; font-size: 0.68rem; font-weight: 500; white-space: nowrap; }
+  .badge-done { background: var(--green-light); color: var(--green); padding: 2px 7px; border-radius: 2px; font-size: 0.68rem; font-weight: 500; white-space: nowrap; }
+  .delete-code-btn { width: 24px; height: 24px; border: none; background: transparent; color: var(--ink-faint); cursor: pointer; font-size: 1rem; border-radius: 2px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; flex-shrink: 0; }
+  .delete-code-btn:hover { background: var(--red-light); color: var(--red); }
+  .add-code-form { padding: 1rem 1.25rem; border-top: 1px solid var(--border); background: var(--paper); display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .code-input-field { flex: 1; min-width: 80px; padding: 0.55rem 0.75rem; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; border: 1px solid var(--border); background: var(--white); color: var(--ink); border-radius: 2px; outline: none; transition: border-color 0.2s; }
+  .code-input-field:focus { border-color: var(--ink); }
+  .code-input-field.code-field { font-family: monospace; letter-spacing: 0.1em; text-transform: uppercase; max-width: 110px; }
+  .bulk-area { width: 100%; padding: 0.6rem 0.75rem; font-family: monospace; font-size: 0.8rem; border: 1px solid var(--border); background: var(--white); color: var(--ink); border-radius: 2px; outline: none; resize: vertical; min-height: 120px; line-height: 1.6; transition: border-color 0.2s; }
+  .bulk-area:focus { border-color: var(--ink); }
 
-  .empty-state p { font-size: 0.85rem; }
+  /* Settings */
+  .settings-section { background: var(--white); border: 1px solid var(--border); border-radius: 4px; padding: 1.5rem; margin-bottom: 1.5rem; }
+  .settings-title { font-size: 10px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 1rem; }
+  .setting-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; flex-wrap: wrap; }
+  .setting-row:last-child { margin-bottom: 0; }
+  .setting-label { font-size: 0.82rem; color: var(--ink); min-width: 140px; }
+  .setting-input { flex: 1; min-width: 200px; padding: 0.55rem 0.75rem; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; border: 1px solid var(--border); background: var(--paper); color: var(--ink); border-radius: 2px; outline: none; transition: border-color 0.2s; }
+  .setting-input:focus { border-color: var(--ink); }
+  .setting-hint { font-size: 0.7rem; color: var(--ink-soft); margin-top: 0.4rem; line-height: 1.5; }
 
-  .loading-state {
-    padding: 3rem;
-    text-align: center;
-    color: var(--ink-soft);
-    font-size: 0.85rem;
-  }
-
-  .config-banner {
-    background: #fff8e1;
-    border: 1px solid #f0d060;
-    border-radius: 3px;
-    padding: 0.75rem 1rem;
-    font-size: 0.78rem;
-    color: #7a6000;
-    margin-bottom: 1.5rem;
-  }
-
-  .config-banner code {
-    font-family: monospace;
-    background: rgba(0,0,0,0.07);
-    padding: 1px 5px;
-    border-radius: 2px;
-  }
+  @keyframes shake { 0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)} }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)} }
+  .fade-in { animation: fadeIn 0.2s ease; }
 </style>
 </head>
 <body>
@@ -340,8 +137,7 @@
     <p style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:.75rem">Admin</p>
     <h1 class="login-title">Adrian & Silvi</h1>
     <p class="login-sub">RSVP Dashboard · 7. August 2026</p>
-    <input class="pw-input" id="pwInput" type="password" placeholder="Passwort"
-      onkeydown="if(event.key==='Enter')doLogin()">
+    <input class="pw-input" id="pwInput" type="password" placeholder="Passwort" onkeydown="if(event.key==='Enter')doLogin()">
     <div class="login-error" id="loginError"></div>
     <button class="login-btn" onclick="doLogin()">Einloggen →</button>
   </div>
@@ -350,237 +146,420 @@
 <!-- App -->
 <div class="app" id="app">
 
-  <div class="config-banner" id="configBanner" style="display:none">
-    ⚠ Google Script URL noch nicht konfiguriert. Bitte <code>SCRIPT_URL</code> in <code>admin.html</code> und <code>form.html</code> ersetzen. Daten werden direkt aus Google Sheets geladen sobald konfiguriert.
+  <nav class="tab-nav">
+    <button class="tab-btn active" onclick="showTab('rsvp',this)">RSVP Übersicht</button>
+    <button class="tab-btn" onclick="showTab('codes',this)">Gäste-Codes</button>
+    <button class="tab-btn" onclick="showTab('settings',this)">Einstellungen</button>
+  </nav>
+
+  <!-- Tab 1: RSVP -->
+  <div class="tab-panel active" id="tab-rsvp">
+    <div class="panel-header">
+      <div class="panel-title"><small>RSVP Übersicht</small>Adrian & Silvi</div>
+      <div class="header-actions">
+        <button class="btn" onclick="loadData()">↻ Aktualisieren</button>
+        <button class="btn btn-primary" onclick="downloadCSV()">CSV herunterladen</button>
+      </div>
+    </div>
+
+    <div class="banner banner-warning" id="configBanner" style="display:none">
+      ⚠ Google Script URL noch nicht konfiguriert — bitte unter <strong>Einstellungen</strong> eintragen. Im Demo-Modus werden Beispieldaten angezeigt.
+    </div>
+    <div class="banner banner-error" id="loadErrorBanner" style="display:none">
+      ✕ Fehler beim Laden. Bitte Google Script URL unter <strong>Einstellungen</strong> prüfen und sicherstellen, dass das Script als Web-App mit <strong>Zugriff: Jeder</strong> deployed wurde. Außerdem muss in <code>google-script.js</code> die Funktion <code>doGet</code> JSONP unterstützen (siehe unten).
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-num" id="statTotal">—</div><div class="stat-label">Antworten</div></div>
+      <div class="stat-card attending"><div class="stat-num" id="statYes">—</div><div class="stat-label">Zusagen</div></div>
+      <div class="stat-card declining"><div class="stat-num" id="statNo">—</div><div class="stat-label">Absagen</div></div>
+      <div class="stat-card"><div class="stat-num" id="statPending">—</div><div class="stat-label">Ausstehend</div></div>
+      <div class="stat-card"><div class="stat-num" id="statGuests">—</div><div class="stat-label">Personen total</div></div>
+      <div class="stat-card"><div class="stat-num" id="statChildren">—</div><div class="stat-label">Kinder</div></div>
+    </div>
+
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="setFilter('all',this)">Alle</button>
+      <button class="filter-btn" onclick="setFilter('yes',this)">Zusagen</button>
+      <button class="filter-btn" onclick="setFilter('no',this)">Absagen</button>
+      <button class="filter-btn" onclick="setFilter('children',this)">Mit Kindern</button>
+    </div>
+
+    <div class="table-wrap">
+      <div class="state-msg" id="loadingState">Daten werden geladen...</div>
+      <table id="dataTable" style="display:none">
+        <thead><tr>
+          <th>Datum</th><th>Code</th><th>Name</th><th>Zusage</th>
+          <th>Begleitung</th><th>Kinder</th><th>Anmerkungen</th>
+        </tr></thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+      <div class="state-msg" id="emptyState" style="display:none">Noch keine Antworten eingegangen.</div>
+    </div>
   </div>
 
-  <div class="app-header">
-    <div class="app-title">
-      <small>RSVP Übersicht</small>
-      Adrian & Silvi
+  <!-- Tab 2: Codes -->
+  <div class="tab-panel" id="tab-codes">
+    <div class="panel-header">
+      <div class="panel-title"><small>Gäste-Codes</small>Verwaltung</div>
+      <div class="header-actions">
+        <button class="btn" onclick="exportIndexHtml()" title="index.html mit aktuellen Codes herunterladen">index.html exportieren ↓</button>
+        <button class="btn btn-primary" onclick="showSavedBanner()">Änderungen gespeichert ✓</button>
+      </div>
     </div>
-    <div class="header-actions">
-      <button class="btn" onclick="loadData()">↻ Aktualisieren</button>
-      <button class="btn btn-primary" onclick="downloadCSV()">CSV herunterladen</button>
+
+    <div class="banner banner-success" id="codesSavedBanner" style="display:none">✓ Codes im Browser gespeichert.</div>
+    <div class="banner banner-warning" id="codesSyncBanner" style="display:none">
+      ⚠ Codes wurden geändert. Klicke <strong>„index.html exportieren"</strong> und lade die Datei auf GitHub hoch — sonst funktionieren neue Codes auf der Landing Page nicht.
+    </div>
+
+    <div class="codes-grid">
+      <div class="codes-card">
+        <div class="codes-card-header">
+          <span class="codes-card-title">Alle Codes (<span id="codeCount">0</span>)</span>
+        </div>
+        <div class="codes-list" id="codesList"></div>
+        <div class="add-code-form">
+          <input class="code-input-field code-field" id="newCode" type="text" maxlength="12" placeholder="CODE01" autocapitalize="characters" autocorrect="off" spellcheck="false" onkeydown="if(event.key==='Enter')addCode()">
+          <input class="code-input-field" id="newName" type="text" placeholder="Name / Familie" style="min-width:130px" onkeydown="if(event.key==='Enter')addCode()">
+          <button class="btn btn-primary" onclick="addCode()" style="white-space:nowrap">+ Hinzufügen</button>
+        </div>
+      </div>
+
+      <div class="codes-card">
+        <div class="codes-card-header">
+          <span class="codes-card-title">Bulk Import</span>
+        </div>
+        <div style="padding:1.25rem">
+          <textarea class="bulk-area" id="bulkInput" placeholder="CODE01, Familie Mayer&#10;CODE02, Familie Huber&#10;CODE03, The Smith Family"></textarea>
+          <p style="font-size:0.7rem;color:var(--ink-soft);margin-top:.5rem;line-height:1.6">
+            Ein Eintrag pro Zeile: <code style="font-family:monospace">CODE, Name</code><br>
+            Komma oder Tab als Trennzeichen.
+          </p>
+          <div style="margin-top:.75rem;display:flex;gap:.5rem">
+            <button class="btn btn-primary" onclick="bulkImport()" style="flex:1">Importieren</button>
+            <button class="btn" onclick="document.getElementById('bulkInput').value=''">Leeren</button>
+          </div>
+          <div style="margin-top:.5rem;font-size:0.72rem;color:var(--ink-soft)" id="bulkResult"></div>
+        </div>
+        <div style="border-top:1px solid var(--border);padding:1.25rem">
+          <p style="font-size:10px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:.6rem">Tipps</p>
+          <p style="font-size:0.78rem;color:var(--ink-soft);line-height:1.8">
+            → 5–8 Zeichen, Großbuchstaben + Zahlen<br>
+            → Kein Leerzeichen oder Sonderzeichen<br>
+            → Nach Änderungen: <strong style="font-weight:500">index.html exportieren</strong>
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="stats-row">
-    <div class="stat-card">
-      <div class="stat-num" id="statTotal">—</div>
-      <div class="stat-label">Antworten total</div>
+  <!-- Tab 3: Settings -->
+  <div class="tab-panel" id="tab-settings">
+    <div class="panel-header">
+      <div class="panel-title"><small>Konfiguration</small>Einstellungen</div>
     </div>
-    <div class="stat-card attending">
-      <div class="stat-num" id="statYes">—</div>
-      <div class="stat-label">Zusagen</div>
-    </div>
-    <div class="stat-card declining">
-      <div class="stat-num" id="statNo">—</div>
-      <div class="stat-label">Absagen</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-num" id="statGuests">—</div>
-      <div class="stat-label">Personen total</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-num" id="statChildren">—</div>
-      <div class="stat-label">Kinder</div>
-    </div>
-  </div>
 
-  <div class="filter-bar">
-    <button class="filter-btn active" onclick="setFilter('all', this)">Alle</button>
-    <button class="filter-btn" onclick="setFilter('yes', this)">Zusagen</button>
-    <button class="filter-btn" onclick="setFilter('no', this)">Absagen</button>
-    <button class="filter-btn" onclick="setFilter('children', this)">Mit Kindern</button>
-  </div>
+    <div class="settings-section">
+      <div class="settings-title">Google Apps Script</div>
+      <div class="setting-row">
+        <label class="setting-label">Script URL</label>
+        <input class="setting-input" id="settingScriptUrl" type="url" placeholder="https://script.google.com/macros/s/..." spellcheck="false">
+      </div>
+      <p class="setting-hint">Die Web-App-URL aus Google Apps Script (Deploy → Web App URL).</p>
+    </div>
 
-  <div class="table-wrap">
-    <div class="loading-state" id="loadingState">Daten werden geladen...</div>
-    <table id="dataTable" style="display:none">
-      <thead>
-        <tr>
-          <th>Datum</th>
-          <th>Code</th>
-          <th>Name</th>
-          <th>Zusage</th>
-          <th>Begleitung</th>
-          <th>Kinder</th>
-          <th>Anmerkungen</th>
-        </tr>
-      </thead>
-      <tbody id="tableBody"></tbody>
-    </table>
-    <div class="empty-state" id="emptyState" style="display:none">
-      <p>Noch keine Antworten eingegangen.</p>
+    <div class="settings-section">
+      <div class="settings-title">Admin-Zugang</div>
+      <div class="setting-row">
+        <label class="setting-label">Passwort</label>
+        <input class="setting-input" id="settingPassword" type="text" placeholder="adrian-silvi-2026">
+      </div>
+      <p class="setting-hint">Muss identisch mit <code>ADMIN_PASSWORD</code> in <code>google-script.js</code> sein.</p>
+    </div>
+
+    <div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:1rem">
+      <button class="btn btn-primary" onclick="saveSettings()">Speichern</button>
+      <button class="btn" onclick="loadData();showTab('rsvp',document.querySelector('.tab-btn'))">Verbindung testen</button>
+    </div>
+    <div class="banner banner-success" id="settingsSavedBanner" style="display:none">✓ Einstellungen gespeichert.</div>
+    <div class="banner banner-error" id="settingsErrorBanner" style="display:none"></div>
+
+    <div class="settings-section" style="margin-top:1.5rem">
+      <div class="settings-title">Google Script — JSONP Hinweis</div>
+      <p style="font-size:0.78rem;color:var(--ink-soft);line-height:1.7;margin-bottom:.75rem">
+        GitHub Pages kann wegen CORS keine direkten GET-Anfragen an Google Scripts senden. Das Admin-Dashboard nutzt daher <strong style="font-weight:500">JSONP</strong>. Damit das funktioniert, muss die <code>doGet</code>-Funktion in <code>google-script.js</code> den <code>callback</code>-Parameter unterstützen. Die mitgelieferte Version tut das bereits — stelle sicher, dass du die aktuellste Version deployed hast.
+      </p>
+      <p style="font-size:0.78rem;color:var(--ink-soft);line-height:1.7">
+        Falls der Fehler weiterhin auftritt: Im Google Script Editor → <strong>Deploy → Bereitstellungen verwalten → Bearbeiten → Version: Neue Version</strong> erstellen und neu deployen.
+      </p>
     </div>
   </div>
 
 </div>
 
 <script>
-// ── Config ────────────────────────────────────────────────────
-const ADMIN_PASSWORD = 'adrian-silvi-2026'; // Change this!
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwI8Vh1QEc65ji1C9TNo5xGQIVkWrFNRjfIwCQ376cGBFaEqH2Ciyx6T2YOnkyx7TcN/exec'; // Same as in form.html
+const DEFAULTS = { password: 'adrian-silvi-2026', scriptUrl: '' };
+const getCfg = k => localStorage.getItem('wcfg_'+k) || DEFAULTS[k] || '';
+const setCfg = (k,v) => localStorage.setItem('wcfg_'+k, v);
+const loadCodes = () => { try { return JSON.parse(localStorage.getItem('wcodes')||'{}'); } catch(e) { return {}; } };
+const saveCodes = obj => localStorage.setItem('wcodes', JSON.stringify(obj));
 
-// ── Login ─────────────────────────────────────────────────────
+// ── Login ────────────────────────────────────────────────────
 function doLogin() {
   const pw = document.getElementById('pwInput').value;
-  const err = document.getElementById('loginError');
-
-  if (pw === ADMIN_PASSWORD) {
-    sessionStorage.setItem('admin_auth', '1');
+  if (pw === getCfg('password')) {
+    sessionStorage.setItem('admin_auth','1');
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('app').classList.add('visible');
-    if (SCRIPT_URL === 'YOUR_GOOGLE_SCRIPT_URL_HERE') {
-      document.getElementById('configBanner').style.display = 'block';
-    }
-    loadData();
+    initApp();
   } else {
-    document.getElementById('pwInput').classList.add('error');
-    err.textContent = 'Falsches Passwort.';
-    setTimeout(() => {
-      document.getElementById('pwInput').classList.remove('error');
-    }, 600);
+    const inp = document.getElementById('pwInput');
+    inp.classList.add('shake');
+    document.getElementById('loginError').textContent = 'Falsches Passwort.';
+    setTimeout(() => inp.classList.remove('shake'), 400);
   }
 }
-
-// Check session
-if (sessionStorage.getItem('admin_auth') === '1') {
-  document.getElementById('loginScreen').style.display = 'none';
+if (sessionStorage.getItem('admin_auth')==='1') {
+  document.getElementById('loginScreen').style.display='none';
   document.getElementById('app').classList.add('visible');
-  if (SCRIPT_URL === 'YOUR_GOOGLE_SCRIPT_URL_HERE') {
-    document.getElementById('configBanner').style.display = 'block';
-  }
+  initApp();
 }
 
-// ── Data ──────────────────────────────────────────────────────
-let allData = [];
-let currentFilter = 'all';
+function initApp() {
+  document.getElementById('settingScriptUrl').value = getCfg('scriptUrl');
+  document.getElementById('settingPassword').value = getCfg('password');
+  if (!getCfg('scriptUrl')) document.getElementById('configBanner').style.display='block';
+  renderCodesList();
+  loadData();
+}
 
-async function loadData() {
-  if (SCRIPT_URL === 'YOUR_GOOGLE_SCRIPT_URL_HERE') {
-    // Show demo data when not configured
+// ── Tabs ──────────────────────────────────────────────────────
+function showTab(name, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── Settings ──────────────────────────────────────────────────
+function saveSettings() {
+  setCfg('scriptUrl', document.getElementById('settingScriptUrl').value.trim());
+  setCfg('password', document.getElementById('settingPassword').value.trim());
+  document.getElementById('configBanner').style.display = getCfg('scriptUrl') ? 'none' : 'block';
+  flashBanner('settingsSavedBanner');
+}
+
+// ── Data — JSONP to bypass CORS ───────────────────────────────
+let allData = [], currentFilter = 'all';
+
+function loadData() {
+  const url = getCfg('scriptUrl');
+  document.getElementById('loadErrorBanner').style.display='none';
+
+  if (!url) {
     allData = getDemoData();
-    renderTable(allData);
+    renderTable(filterData(allData));
     updateStats(allData);
     return;
   }
 
-  document.getElementById('loadingState').style.display = 'block';
-  document.getElementById('dataTable').style.display = 'none';
-  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('loadingState').style.display='block';
+  document.getElementById('dataTable').style.display='none';
+  document.getElementById('emptyState').style.display='none';
 
-  try {
-    const res = await fetch(`${SCRIPT_URL}?action=getAll&pw=${encodeURIComponent(ADMIN_PASSWORD)}`);
-    const json = await res.json();
-    allData = json.data || [];
-    renderTable(filterData(allData));
-    updateStats(allData);
-  } catch(e) {
-    document.getElementById('loadingState').textContent = 'Fehler beim Laden. Google Script URL prüfen.';
-  }
+  // Clean up old script tag
+  const old = document.getElementById('_rsvpScript');
+  if (old) old.remove();
+
+  // Timeout fallback
+  const timer = setTimeout(() => {
+    document.getElementById('loadingState').style.display='none';
+    document.getElementById('loadErrorBanner').style.display='block';
+  }, 12000);
+  window._rsvpTimer = timer;
+
+  const pw = encodeURIComponent(getCfg('password'));
+  const script = document.createElement('script');
+  script.id = '_rsvpScript';
+  script.src = `${url}?action=getAll&pw=${pw}&callback=_rsvpCb`;
+  script.onerror = () => {
+    clearTimeout(timer);
+    document.getElementById('loadingState').style.display='none';
+    document.getElementById('loadErrorBanner').style.display='block';
+  };
+  document.head.appendChild(script);
 }
+
+window._rsvpCb = function(json) {
+  clearTimeout(window._rsvpTimer);
+  document.getElementById('loadErrorBanner').style.display='none';
+  if (json && json.error) {
+    document.getElementById('loadingState').style.display='none';
+    document.getElementById('loadErrorBanner').style.display='block';
+    return;
+  }
+  allData = (json && json.data) || [];
+  renderTable(filterData(allData));
+  updateStats(allData);
+};
 
 function getDemoData() {
   return [
-    { timestamp:'2026-03-15T10:22:00Z', code:'MAYER01', guestName:'Familie Mayer', attending:'Ja', companion:'Thomas Mayer', childrenCount:'2', childrenDetails:'Emma (8), Luca (5)', notes:'Vegetarisch' },
-    { timestamp:'2026-03-18T14:05:00Z', code:'SMITH02', guestName:'The Smith Family', attending:'Yes', companion:'No', childrenCount:'0', childrenDetails:'—', notes:'—' },
-    { timestamp:'2026-03-20T09:10:00Z', code:'DEMO01', guestName:'Demo Gast', attending:'Nein', companion:'—', childrenCount:'0', childrenDetails:'—', notes:'Leider verhindert' },
+    {timestamp:'2026-03-15T10:22:00Z',code:'MAYER01',guestName:'Familie Mayer',attending:'Ja',companion:'Thomas Mayer',childrenCount:'2',childrenDetails:'Emma (8), Luca (5)',notes:'Vegetarisch'},
+    {timestamp:'2026-03-18T14:05:00Z',code:'SMITH02',guestName:'The Smith Family',attending:'Yes',companion:'No',childrenCount:'0',childrenDetails:'—',notes:'—'},
+    {timestamp:'2026-03-20T09:10:00Z',code:'DEMO01',guestName:'Demo Gast',attending:'Nein',companion:'—',childrenCount:'0',childrenDetails:'—',notes:'Leider verhindert'},
   ];
 }
 
-function filterData(data) {
-  if (currentFilter === 'all') return data;
-  if (currentFilter === 'yes') return data.filter(r => r.attending === 'Ja' || r.attending === 'Yes');
-  if (currentFilter === 'no') return data.filter(r => r.attending === 'Nein' || r.attending === 'No');
-  if (currentFilter === 'children') return data.filter(r => parseInt(r.childrenCount) > 0);
-  return data;
+function filterData(d) {
+  if (currentFilter==='all') return d;
+  if (currentFilter==='yes') return d.filter(r=>r.attending==='Ja'||r.attending==='Yes');
+  if (currentFilter==='no') return d.filter(r=>r.attending==='Nein'||r.attending==='No');
+  if (currentFilter==='children') return d.filter(r=>parseInt(r.childrenCount)>0);
+  return d;
 }
-
-function setFilter(f, btn) {
-  currentFilter = f;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+function setFilter(f,btn) {
+  currentFilter=f;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   renderTable(filterData(allData));
 }
-
 function renderTable(data) {
-  document.getElementById('loadingState').style.display = 'none';
-
-  if (!data || data.length === 0) {
-    document.getElementById('dataTable').style.display = 'none';
-    document.getElementById('emptyState').style.display = 'block';
+  document.getElementById('loadingState').style.display='none';
+  if (!data||data.length===0) {
+    document.getElementById('dataTable').style.display='none';
+    document.getElementById('emptyState').style.display='block';
     return;
   }
-
-  document.getElementById('dataTable').style.display = 'table';
-  document.getElementById('emptyState').style.display = 'none';
-
-  const tbody = document.getElementById('tableBody');
-  tbody.innerHTML = '';
-
-  data.forEach(row => {
-    const isYes = row.attending === 'Ja' || row.attending === 'Yes';
-    const date = new Date(row.timestamp).toLocaleDateString('de-DE', {
-      day: '2-digit', month: '2-digit', year: '2-digit',
-      hour: '2-digit', minute: '2-digit'
-    });
-
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td class="td-mono">${date}</td>
-      <td class="td-mono">${row.code || '—'}</td>
-      <td><strong style="font-weight:500">${row.guestName || '—'}</strong></td>
-      <td><span class="badge ${isYes ? 'badge-yes' : 'badge-no'}">${row.attending}</span></td>
-      <td class="td-muted">${row.companion || '—'}</td>
-      <td class="td-muted">${parseInt(row.childrenCount) > 0 ? `${row.childrenCount} (${row.childrenDetails})` : '—'}</td>
-      <td class="td-muted" style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${(row.notes||'').replace(/"/g,"'")}">
-        ${row.notes || '—'}
-      </td>
-    `;
+  document.getElementById('dataTable').style.display='table';
+  document.getElementById('emptyState').style.display='none';
+  const tbody=document.getElementById('tableBody');
+  tbody.innerHTML='';
+  data.forEach(row=>{
+    const isYes=row.attending==='Ja'||row.attending==='Yes';
+    const date=new Date(row.timestamp).toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'});
+    const tr=document.createElement('tr');
+    tr.className='fade-in';
+    tr.innerHTML=`<td class="td-mono">${date}</td><td class="td-mono">${row.code||'—'}</td><td><strong style="font-weight:500">${row.guestName||'—'}</strong></td><td><span class="badge ${isYes?'badge-yes':'badge-no'}">${row.attending}</span></td><td class="td-muted">${row.companion||'—'}</td><td class="td-muted">${parseInt(row.childrenCount)>0?`${row.childrenCount} (${row.childrenDetails})`:'—'}</td><td class="td-muted" style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${(row.notes||'').replace(/"/g,"'")}">${row.notes||'—'}</td>`;
     tbody.appendChild(tr);
   });
 }
-
 function updateStats(data) {
-  const yes = data.filter(r => r.attending === 'Ja' || r.attending === 'Yes');
-  const no = data.filter(r => r.attending === 'Nein' || r.attending === 'No');
-  const childrenTotal = data.reduce((s,r) => s + (parseInt(r.childrenCount) || 0), 0);
-
-  // Total persons: attending guests + companions
-  let persons = yes.length;
-  yes.forEach(r => {
-    if (r.companion && r.companion !== '—' && r.companion !== 'Nein' && r.companion !== 'No') persons++;
-  });
-
-  document.getElementById('statTotal').textContent = data.length;
-  document.getElementById('statYes').textContent = yes.length;
-  document.getElementById('statNo').textContent = no.length;
-  document.getElementById('statGuests').textContent = persons;
-  document.getElementById('statChildren').textContent = childrenTotal;
+  const codes=loadCodes();
+  const totalCodes=Object.keys(codes).length;
+  const yes=data.filter(r=>r.attending==='Ja'||r.attending==='Yes');
+  const no=data.filter(r=>r.attending==='Nein'||r.attending==='No');
+  const childrenTotal=data.reduce((s,r)=>s+(parseInt(r.childrenCount)||0),0);
+  let persons=yes.length;
+  yes.forEach(r=>{if(r.companion&&r.companion!=='—'&&r.companion!=='Nein'&&r.companion!=='No')persons++;});
+  document.getElementById('statTotal').textContent=data.length;
+  document.getElementById('statYes').textContent=yes.length;
+  document.getElementById('statNo').textContent=no.length;
+  document.getElementById('statPending').textContent=Math.max(0,totalCodes-data.length);
+  document.getElementById('statGuests').textContent=persons;
+  document.getElementById('statChildren').textContent=childrenTotal;
 }
-
 function downloadCSV() {
-  const headers = ['Zeitstempel','Code','Name','Zusage','Begleitung','Anzahl Kinder','Kinder Details','Anmerkungen'];
-  const rows = allData.map(r => [
-    r.timestamp, r.code, r.guestName, r.attending,
-    r.companion, r.childrenCount, r.childrenDetails, r.notes
-  ].map(v => `"${(v||'').replace(/"/g,'""')}"`).join(','));
-
-  const csv = [headers.join(','), ...rows].join('\n');
-  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `rsvp-adrian-silvi-${new Date().toISOString().slice(0,10)}.csv`;
-  a.click();
+  const headers=['Zeitstempel','Code','Name','Zusage','Begleitung','Anzahl Kinder','Kinder Details','Anmerkungen'];
+  const rows=allData.map(r=>[r.timestamp,r.code,r.guestName,r.attending,r.companion,r.childrenCount,r.childrenDetails,r.notes].map(v=>`"${(v||'').replace(/"/g,'""')}"`).join(','));
+  const csv=[headers.join(','),...rows].join('\n');
+  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=`rsvp-adrian-silvi-${new Date().toISOString().slice(0,10)}.csv`;a.click();
   URL.revokeObjectURL(url);
 }
 
-// Auto-load if already logged in
-if (document.getElementById('app').classList.contains('visible')) {
-  loadData();
+// ── Codes ─────────────────────────────────────────────────────
+function renderCodesList() {
+  const codes=loadCodes();
+  const rsvped=new Set(allData.map(r=>r.code));
+  const keys=Object.keys(codes).sort();
+  document.getElementById('codeCount').textContent=keys.length;
+  const list=document.getElementById('codesList');
+  if(keys.length===0){
+    list.innerHTML='<div class="state-msg" style="padding:1.5rem 1.25rem;text-align:left">Noch keine Codes. Unten hinzufügen →</div>';
+    return;
+  }
+  list.innerHTML=keys.map(code=>`
+    <div class="code-row fade-in">
+      <span class="code-pill">${code}</span>
+      <span class="code-name">${codes[code]}</span>
+      <div class="code-actions">
+        <span class="${rsvped.has(code)?'badge-done':'badge-pending'}">${rsvped.has(code)?'✓ RSVP':'ausstehend'}</span>
+        <button class="delete-code-btn" onclick="deleteCode('${code}')" title="Löschen">×</button>
+      </div>
+    </div>`).join('');
+}
+function addCode() {
+  const cEl=document.getElementById('newCode'), nEl=document.getElementById('newName');
+  const code=cEl.value.trim().toUpperCase().replace(/\s+/g,'');
+  const name=nEl.value.trim();
+  if(!code||!name){
+    if(!code){cEl.style.borderColor='var(--red)';}
+    if(!name){nEl.style.borderColor='var(--red)';}
+    setTimeout(()=>{cEl.style.borderColor='';nEl.style.borderColor='';},1200);
+    return;
+  }
+  const codes=loadCodes();
+  codes[code]=name;
+  saveCodes(codes);
+  cEl.value='';nEl.value='';
+  renderCodesList();
+  document.getElementById('codesSyncBanner').style.display='block';
+}
+function deleteCode(code) {
+  if(!confirm(`Code „${code}" (${loadCodes()[code]}) wirklich löschen?`)) return;
+  const codes=loadCodes();
+  delete codes[code];
+  saveCodes(codes);
+  renderCodesList();
+  document.getElementById('codesSyncBanner').style.display='block';
+}
+function bulkImport() {
+  const raw=document.getElementById('bulkInput').value.trim();
+  if(!raw) return;
+  const codes=loadCodes();
+  let added=0,skipped=0;
+  raw.split('\n').map(l=>l.trim()).filter(Boolean).forEach(line=>{
+    const parts=line.split(/[,\t]/).map(p=>p.trim());
+    if(parts.length>=2){
+      const code=parts[0].toUpperCase().replace(/\s+/g,'');
+      const name=parts.slice(1).join(', ').trim();
+      if(code&&name){codes[code]=name;added++;}else skipped++;
+    } else skipped++;
+  });
+  saveCodes(codes);
+  renderCodesList();
+  document.getElementById('bulkResult').textContent=`${added} hinzugefügt${skipped>0?`, ${skipped} übersprungen`:''}`;
+  document.getElementById('bulkInput').value='';
+  document.getElementById('codesSyncBanner').style.display='block';
+}
+function showSavedBanner() { flashBanner('codesSavedBanner'); }
+
+function exportIndexHtml() {
+  const codes=loadCodes();
+  const codesJson=JSON.stringify(codes,null,2);
+  fetch('index.html')
+    .then(r=>r.text())
+    .then(html=>{
+      const updated=html.replace(/const GUEST_CODES\s*=\s*\{[\s\S]*?\};/,`const GUEST_CODES = ${codesJson};`);
+      const blob=new Blob([updated],{type:'text/html;charset=utf-8'});
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement('a');
+      a.href=url;a.download='index.html';a.click();
+      URL.revokeObjectURL(url);
+      document.getElementById('codesSyncBanner').style.display='none';
+      flashBanner('codesSavedBanner');
+    })
+    .catch(()=>alert('index.html konnte nicht geladen werden.\n\nStelle sicher, dass alle Dateien auf GitHub Pages (oder einem lokalen Server) laufen — nicht als lokale Datei geöffnet sind.'));
+}
+
+function flashBanner(id) {
+  const el=document.getElementById(id);
+  el.style.display='block';
+  setTimeout(()=>el.style.display='none',3500);
 }
 </script>
 </body>
