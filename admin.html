@@ -166,7 +166,7 @@
       ⚠ Google Script URL noch nicht konfiguriert — bitte unter <strong>Einstellungen</strong> eintragen. Im Demo-Modus werden Beispieldaten angezeigt.
     </div>
     <div class="banner banner-error" id="loadErrorBanner" style="display:none">
-      ✕ Fehler beim Laden. Bitte Google Script URL unter <strong>Einstellungen</strong> prüfen und sicherstellen, dass das Script als Web-App mit <strong>Zugriff: Jeder</strong> deployed wurde. Außerdem muss in <code>google-script.js</code> die Funktion <code>doGet</code> JSONP unterstützen (siehe unten).
+      ✕ Fehler beim Laden. Das Google Sheet muss öffentlich sein: Sheet öffnen → <strong>Freigeben → Linkfreigabe → Jeder mit dem Link kann ansehen</strong>. Spreadsheet ID unter <strong>Einstellungen</strong> prüfen.
     </div>
 
     <div class="stats-row">
@@ -266,7 +266,17 @@
         <label class="setting-label">Script URL</label>
         <input class="setting-input" id="settingScriptUrl" type="url" placeholder="https://script.google.com/macros/s/..." spellcheck="false">
       </div>
-      <p class="setting-hint">Die Web-App-URL aus Google Apps Script (Deploy → Web App URL).</p>
+      <p class="setting-hint">Die Web-App-URL — wird nur zum Speichern von Antworten (POST) benötigt.</p>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-title">Google Spreadsheet</div>
+      <div class="setting-row">
+        <label class="setting-label">Spreadsheet ID</label>
+        <input class="setting-input" id="settingSheetId" type="text" placeholder="161gyCU3XjbXOl6yrwlrA7nbEO9Yi_XpQS0EWfbQqPq8" spellcheck="false">
+      </div>
+      <p class="setting-hint">Die ID aus der Google Sheets URL: docs.google.com/spreadsheets/d/<strong>DIESE_ID</strong>/edit<br>
+      Das Sheet muss auf <strong>„Jeder mit dem Link kann ansehen"</strong> gesetzt sein (Freigeben → Linkfreigabe).</p>
     </div>
 
     <div class="settings-section">
@@ -286,20 +296,23 @@
     <div class="banner banner-error" id="settingsErrorBanner" style="display:none"></div>
 
     <div class="settings-section" style="margin-top:1.5rem">
-      <div class="settings-title">Google Script — JSONP Hinweis</div>
+      <div class="settings-title">So funktioniert das Laden der Daten</div>
       <p style="font-size:0.78rem;color:var(--ink-soft);line-height:1.7;margin-bottom:.75rem">
-        GitHub Pages kann wegen CORS keine direkten GET-Anfragen an Google Scripts senden. Das Admin-Dashboard nutzt daher <strong style="font-weight:500">JSONP</strong>. Damit das funktioniert, muss die <code>doGet</code>-Funktion in <code>google-script.js</code> den <code>callback</code>-Parameter unterstützen. Die mitgelieferte Version tut das bereits — stelle sicher, dass du die aktuellste Version deployed hast.
+        Der Admin liest Daten direkt aus dem Google Sheet als CSV — kein CORS-Problem. Dafür muss das Sheet einmalig öffentlich lesbar gemacht werden:
       </p>
-      <p style="font-size:0.78rem;color:var(--ink-soft);line-height:1.7">
-        Falls der Fehler weiterhin auftritt: Im Google Script Editor → <strong>Deploy → Bereitstellungen verwalten → Bearbeiten → Version: Neue Version</strong> erstellen und neu deployen.
-      </p>
+      <ol style="font-size:0.78rem;color:var(--ink-soft);line-height:2.2;padding-left:1.25rem">
+        <li>Google Sheet öffnen</li>
+        <li>Oben rechts auf <strong style="font-weight:500">„Share"</strong> klicken</li>
+        <li><strong style="font-weight:500">„Change to anyone with the link"</strong> → <strong style="font-weight:500">„Viewer"</strong></li>
+        <li>Done — Daten werden ab sofort geladen</li>
+      </ol>
     </div>
   </div>
 
 </div>
 
 <script>
-const DEFAULTS = { password: 'adrian-silvi-2026', scriptUrl: 'https://script.google.com/macros/s/AKfycbwI8Vh1QEc65ji1C9TNo5xGQIVkWrFNRjfIwCQ376cGBFaEqH2Ciyx6T2YOnkyx7TcN/exec' };
+const DEFAULTS = { password: 'adrian-silvi-2026', scriptUrl: 'https://script.google.com/macros/s/AKfycbwI8Vh1QEc65ji1C9TNo5xGQIVkWrFNRjfIwCQ376cGBFaEqH2Ciyx6T2YOnkyx7TcN/exec', sheetId: '161gyCU3XjbXOl6yrwlrA7nbEO9Yi_XpQS0EWfbQqPq8' };
 const getCfg = k => localStorage.getItem('wcfg_'+k) || DEFAULTS[k] || '';
 const setCfg = (k,v) => localStorage.setItem('wcfg_'+k, v);
 const loadCodes = () => { try { return JSON.parse(localStorage.getItem('wcodes')||'{}'); } catch(e) { return {}; } };
@@ -329,7 +342,9 @@ if (sessionStorage.getItem('admin_auth')==='1') {
 function initApp() {
   document.getElementById('settingScriptUrl').value = getCfg('scriptUrl');
   document.getElementById('settingPassword').value = getCfg('password');
-  if (!getCfg('scriptUrl')) document.getElementById('configBanner').style.display='block';
+  document.getElementById('settingSheetId').value = getCfg('sheetId') || '161gyCU3XjbXOl6yrwlrA7nbEO9Yi_XpQS0EWfbQqPq8';
+  const sheetId = getCfg('sheetId') || '161gyCU3XjbXOl6yrwlrA7nbEO9Yi_XpQS0EWfbQqPq8';
+  if (!sheetId) document.getElementById('configBanner').style.display='block';
   renderCodesList();
   loadData();
 }
@@ -346,18 +361,18 @@ function showTab(name, btn) {
 function saveSettings() {
   setCfg('scriptUrl', document.getElementById('settingScriptUrl').value.trim());
   setCfg('password', document.getElementById('settingPassword').value.trim());
-  document.getElementById('configBanner').style.display = getCfg('scriptUrl') ? 'none' : 'block';
+  setCfg('sheetId', document.getElementById('settingSheetId').value.trim());
   flashBanner('settingsSavedBanner');
 }
 
-// ── Data — JSONP to bypass CORS ───────────────────────────────
+// ── Data — read directly from Google Sheets CSV (no CORS) ─────
 let allData = [], currentFilter = 'all';
 
-function loadData() {
-  const url = getCfg('scriptUrl');
+async function loadData() {
+  const sheetId = getCfg('sheetId') || '161gyCU3XjbXOl6yrwlrA7nbEO9Yi_XpQS0EWfbQqPq8';
   document.getElementById('loadErrorBanner').style.display='none';
 
-  if (!url) {
+  if (!sheetId) {
     allData = getDemoData();
     renderTable(filterData(allData));
     updateStats(allData);
@@ -367,42 +382,45 @@ function loadData() {
   document.getElementById('loadingState').style.display='block';
   document.getElementById('dataTable').style.display='none';
   document.getElementById('emptyState').style.display='none';
+  document.getElementById('configBanner').style.display='none';
 
-  // Clean up old script tag
-  const old = document.getElementById('_rsvpScript');
-  if (old) old.remove();
+  // Google Sheets CSV export URL — works without CORS if sheet is public
+  const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=RSVPs`;
 
-  // Timeout fallback
-  const timer = setTimeout(() => {
+  try {
+    const res = await fetch(csvUrl);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const text = await res.text();
+    allData = parseCSV(text);
+    renderTable(filterData(allData));
+    updateStats(allData);
+  } catch(e) {
     document.getElementById('loadingState').style.display='none';
     document.getElementById('loadErrorBanner').style.display='block';
-  }, 12000);
-  window._rsvpTimer = timer;
-
-  const pw = encodeURIComponent(getCfg('password'));
-  const script = document.createElement('script');
-  script.id = '_rsvpScript';
-  script.src = `${url}?action=getAll&pw=${pw}&callback=_rsvpCb`;
-  script.onerror = () => {
-    clearTimeout(timer);
-    document.getElementById('loadingState').style.display='none';
-    document.getElementById('loadErrorBanner').style.display='block';
-  };
-  document.head.appendChild(script);
+  }
 }
 
-window._rsvpCb = function(json) {
-  clearTimeout(window._rsvpTimer);
-  document.getElementById('loadErrorBanner').style.display='none';
-  if (json && json.error) {
-    document.getElementById('loadingState').style.display='none';
-    document.getElementById('loadErrorBanner').style.display='block';
-    return;
-  }
-  allData = (json && json.data) || [];
-  renderTable(filterData(allData));
-  updateStats(allData);
-};
+// Parse CSV into array of row objects
+function parseCSV(text) {
+  const lines = text.trim().split('\n');
+  if (lines.length < 2) return [];
+  // Skip header row (index 0), parse data rows
+  return lines.slice(1).map(line => {
+    const cols = line.match(/(".*?"|[^,]+)(?=,|$)/g) || [];
+    const clean = cols.map(c => c.replace(/^"|"$/g,'').replace(/""/g,'"').trim());
+    return {
+      timestamp:       clean[0] || '',
+      code:            clean[1] || '',
+      guestName:       clean[2] || '',
+      language:        clean[3] || '',
+      attending:       clean[4] || '',
+      companion:       clean[5] || '—',
+      childrenCount:   clean[6] || '0',
+      childrenDetails: clean[7] || '—',
+      notes:           clean[8] || '—',
+    };
+  }).filter(r => r.code).reverse();
+}
 
 function getDemoData() {
   return [
