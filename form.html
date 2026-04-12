@@ -125,7 +125,7 @@
       </div>
     </div>
     <div id="attendingSection" class="collapsible hidden" style="max-height:2000px">
-      <div class="form-section">
+      <div class="form-section" id="section02">
         <div class="section-label">02</div>
         <div class="section-title"><span data-lang="de">Bringt ihr eine Begleitung mit?</span><span data-lang="en">Are you bringing a plus-one?</span></div>
         <div class="yn-toggle">
@@ -139,7 +139,7 @@
           </div>
         </div>
       </div>
-      <div class="form-section">
+      <div class="form-section" id="section03">
         <div class="section-label">03</div>
         <div class="section-title"><span data-lang="de">Bringt ihr Kinder mit?</span><span data-lang="en">Are you bringing children?</span></div>
         <div class="yn-toggle">
@@ -193,13 +193,25 @@
 const guestCode = sessionStorage.getItem('wedding_code') || '???';
 const guestName = sessionStorage.getItem('wedding_guest') || '';
 const savedLang = sessionStorage.getItem('wedding_lang');
+const formType  = parseInt(sessionStorage.getItem('wedding_type') || '3'); // 1, 2, or 3
 let state = { attendance: null, companion: null, children: null, childCount: 0 };
 
 window.onload = () => {
   if (savedLang === 'en') setLang('en');
   if (guestName) document.getElementById('guestGreeting').textContent = savedLang==='en' ? `Dear ${guestName}` : `Liebe/r ${guestName}`;
   updatePlaceholder();
+  applyFormType();
 };
+
+// Show/hide sections based on formType
+function applyFormType() {
+  const sec02 = document.getElementById('section02');
+  const sec03 = document.getElementById('section03');
+  if (formType < 2) { sec02.style.display='none'; sec03.style.display='none'; }
+  else if (formType < 3) { sec02.style.display=''; sec03.style.display='none'; }
+  else { sec02.style.display=''; sec03.style.display=''; }
+}
+
 function setLang(l) {
   document.body.classList.toggle('en', l==='en');
   document.querySelectorAll('.lang-btn').forEach((b,i) => b.classList.toggle('active',(i===0&&l==='de')||(i===1&&l==='en')));
@@ -248,7 +260,10 @@ function removeChild(btn) {
 }
 function updateSubmitBtn() {
   let ready = state.attendance !== null;
-  if (state.attendance==='yes') ready = ready && state.companion!==null && state.children!==null;
+  if (state.attendance === 'yes') {
+    if (formType >= 2) ready = ready && state.companion !== null;
+    if (formType >= 3) ready = ready && state.children !== null;
+  }
   document.getElementById('submitBtn').disabled = !ready;
 }
 async function submitForm() {

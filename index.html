@@ -90,12 +90,12 @@
   <p class="footer-note">
     <span data-lang="de">Fragen? Schreibt uns unter</span>
     <span data-lang="en">Questions? Write us at</span>
-    hello@adrianundsilvi.de
+    <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d7bfb2bbbbb897b6b3a5beb6b9a2b9b3a4bebba1bef9b3b2">[email&#160;protected]</a>
   </p>
 </div>
 
 <!-- Firebase -->
-<script type="module">
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
   import { getFirestore, collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
@@ -114,8 +114,7 @@
     const snapshot = await getDocs(collection(db, 'codes'));
     const codes = {};
     snapshot.forEach(doc => {
-      // Each document: id = code, fields: { name: "Familie Mayer" }
-      codes[doc.id] = doc.data().name || doc.id;
+      codes[doc.id] = { name: doc.data().name || doc.id, type: doc.data().type || '3' };
     });
     window.GUEST_CODES = codes;
   } catch(e) {
@@ -157,10 +156,13 @@ function checkCode() {
     return;
   }
 
-  const guestName = window.GUEST_CODES[code];
-  if (guestName) {
+  const entry = window.GUEST_CODES[code];
+  if (entry) {
+    const guestName = typeof entry === 'object' ? entry.name : entry;
+    const formType  = typeof entry === 'object' ? (entry.type || '3') : '3';
     sessionStorage.setItem('wedding_code', code);
     sessionStorage.setItem('wedding_guest', guestName);
+    sessionStorage.setItem('wedding_type', formType);
     sessionStorage.setItem('wedding_lang', isEN ? 'en' : 'de');
     window.location.href = 'form.html';
   } else {
@@ -172,12 +174,4 @@ function checkCode() {
 }
 
 // Restore language
-const savedLang = localStorage.getItem('wedding_lang');
-if (savedLang === 'en') setLang('en');
-
-// Disable form until Firebase has loaded codes
-document.getElementById('codeInput').disabled = true;
-document.getElementById('submitBtn').disabled = true;
-</script>
-</body>
-</html>
+const savedLang = localStorage.getItem('wedd
