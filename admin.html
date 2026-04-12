@@ -468,7 +468,7 @@ function renderTable(data) {
       <td class="td-muted">${row.companion||'—'}</td>
       <td class="td-muted">${parseInt(row.childrenCount)>0?`${row.childrenCount} (${row.childrenDetails})`:'—'}</td>
       <td class="td-muted" style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${(row.notes||'').replace(/"/g,"'")}">${row.notes||'—'}</td>
-      <td><button onclick="deleteRSVP('${row.id}','${(row.guestName||'').replace(/'/g,"\\'")}\")" style="width:26px;height:26px;border:1px solid var(--border);background:transparent;border-radius:2px;cursor:pointer;color:var(--ink-faint);font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all .15s" onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--ink-faint)'">×</button></td>
+      <td><button class="del-rsvp-btn" data-id="${row.id}" data-name="${(row.guestName||'').replace(/"/g,'&quot;')}" style="width:26px;height:26px;border:1px solid var(--border);background:transparent;border-radius:2px;cursor:pointer;color:var(--ink-faint);font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all .15s" onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--ink-faint)'">×</button></td>
     `;
     tbody.appendChild(tr);
   });
@@ -481,6 +481,12 @@ async function deleteRSVP(id, name) {
     alert('Löschen fehlgeschlagen. Bitte Firestore-Regeln prüfen.');
   }
 }
+
+// Delegated click handler for delete buttons (avoids inline onclick quote issues)
+document.addEventListener('click', e => {
+  const btn = e.target.closest('.del-rsvp-btn');
+  if (btn) deleteRSVP(btn.dataset.id, btn.dataset.name);
+});
 function updateStats(data) {
   const totalCodes = Object.keys(codesData).length;
   const yes=data.filter(r=>r.attending==='Ja'||r.attending==='Yes');
