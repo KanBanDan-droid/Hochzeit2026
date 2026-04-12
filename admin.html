@@ -193,7 +193,7 @@
       <table id="dataTable" style="display:none">
         <thead><tr>
           <th>Datum</th><th>Code</th><th>Name</th><th>Zusage</th>
-          <th>Begleitung</th><th>Kinder</th><th>Anmerkungen</th>
+          <th>Begleitung</th><th>Kinder</th><th>Anmerkungen</th><th></th>
         </tr></thead>
         <tbody id="tableBody"></tbody>
       </table>
@@ -272,14 +272,8 @@
       <pre style="margin-top:1rem;background:var(--paper);border:1px solid var(--border);border-radius:3px;padding:1rem;font-size:0.75rem;line-height:1.8;overflow-x:auto">rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Anyone can write RSVPs (guests submitting forms)
     match /rsvps/{doc} {
-      allow create: if true;
-      allow read, update, delete: if false;
-    }
-    // Admin reads all RSVPs — secured by API key in Firebase config
-    match /rsvps/{doc} {
-      allow read: if true;
+      allow create, read, delete: if true;
     }
   }
 }</pre>
@@ -290,7 +284,7 @@ service cloud.firestore {
 <!-- Firebase -->
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-  import { getFirestore, collection, onSnapshot, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+  import { getFirestore, collection, onSnapshot, query, orderBy, doc, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
   const app = initializeApp({
     apiKey: "AIzaSyDyU8mx1XEO-OqOxwco--XKa7aG1E70czs",
@@ -302,7 +296,6 @@ service cloud.firestore {
   });
   const db = getFirestore(app);
 
-  // Expose to global scope
   window._startFirebaseListener = () => {
     const q = query(collection(db, 'rsvps'), orderBy('createdAt', 'desc'));
     return onSnapshot(q,
@@ -310,10 +303,12 @@ service cloud.firestore {
         const data = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
         window._onFirebaseData(data);
       },
-      (err) => {
-        window._onFirebaseError(err);
-      }
+      (err) => { window._onFirebaseError(err); }
     );
+  };
+
+  window._deleteRSVP = async (id) => {
+    await deleteDoc(doc(db, 'rsvps', id));
   };
 </script>
 
@@ -444,9 +439,18 @@ function renderTable(data) {
       <td class="td-muted">${row.companion||'—'}</td>
       <td class="td-muted">${parseInt(row.childrenCount)>0?`${row.childrenCount} (${row.childrenDetails})`:'—'}</td>
       <td class="td-muted" style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${(row.notes||'').replace(/"/g,"'")}">${row.notes||'—'}</td>
+      <td><button onclick="deleteRSVP('${row.id}','${(row.guestName||'').replace(/'/g,"\\'")}\")" style="width:26px;height:26px;border:1px solid var(--border);background:transparent;border-radius:2px;cursor:pointer;color:var(--ink-faint);font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all .15s" onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--ink-faint)'">×</button></td>
     `;
     tbody.appendChild(tr);
   });
+}
+async function deleteRSVP(id, name) {
+  if (!confirm(`Eintrag von „${name}" wirklich löschen?\nDies kann nicht rückgängig gemacht werden.`)) return;
+  try {
+    await window._deleteRSVP(id);
+  } catch(e) {
+    alert('Löschen fehlgeschlagen. Bitte Firestore-Regeln prüfen.');
+  }
 }
 function updateStats(data) {
   const codes=loadCodes();
