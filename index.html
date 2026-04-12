@@ -90,12 +90,12 @@
   <p class="footer-note">
     <span data-lang="de">Fragen? Schreibt uns unter</span>
     <span data-lang="en">Questions? Write us at</span>
-    <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d7bfb2bbbbb897b6b3a5beb6b9a2b9b3a4bebba1bef9b3b2">[email&#160;protected]</a>
+    hello@adrianundsilvi.de
   </p>
 </div>
 
-<!-- Firebase -->
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="module">
+<!-- Firebase — loads codes into window.GUEST_CODES -->
+<script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
   import { getFirestore, collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
@@ -109,7 +109,6 @@
   });
   const db = getFirestore(app);
 
-  // Load guest codes from Firestore into a local map
   try {
     const snapshot = await getDocs(collection(db, 'codes'));
     const codes = {};
@@ -122,7 +121,7 @@
     window.GUEST_CODES = {};
   }
 
-  // Unlock the form
+  // Unlock the form once codes are loaded
   document.getElementById('codeInput').disabled = false;
   document.getElementById('submitBtn').disabled = false;
   document.getElementById('loadingHint').style.display = 'none';
