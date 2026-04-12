@@ -205,14 +205,8 @@
   <div class="tab-panel" id="tab-codes">
     <div class="panel-header">
       <div class="panel-title"><small>Gäste-Codes</small>Verwaltung</div>
-      <div class="header-actions">
-        <button class="btn" onclick="exportIndexHtml()">index.html exportieren ↓</button>
-      </div>
     </div>
     <div class="banner banner-success" id="codesSavedBanner" style="display:none">✓ Gespeichert.</div>
-    <div class="banner banner-warning" id="codesSyncBanner" style="display:none">
-      ⚠ Nach Änderungen: <strong>„index.html exportieren"</strong> klicken und auf GitHub hochladen.
-    </div>
     <div class="codes-grid">
       <div class="codes-card">
         <div class="codes-card-header">
@@ -275,6 +269,9 @@ service cloud.firestore {
     match /rsvps/{doc} {
       allow create, read, delete: if true;
     }
+    match /codes/{doc} {
+      allow read, write: if true;
+    }
   }
 }</pre>
     </div>
@@ -284,7 +281,7 @@ service cloud.firestore {
 <!-- Firebase -->
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-  import { getFirestore, collection, onSnapshot, query, orderBy, doc, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+  import { getFirestore, collection, onSnapshot, query, orderBy, doc, deleteDoc, setDoc, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
   const app = initializeApp({
     apiKey: "AIzaSyDyU8mx1XEO-OqOxwco--XKa7aG1E70czs",
@@ -307,8 +304,27 @@ service cloud.firestore {
     );
   };
 
+  window._startCodesListener = () => {
+    return onSnapshot(collection(db, 'codes'),
+      (snapshot) => {
+        const codes = {};
+        snapshot.forEach(d => { codes[d.id] = d.data().name || d.id; });
+        window._onCodesData(codes);
+      },
+      (err) => { console.error('Codes listener error:', err); }
+    );
+  };
+
   window._deleteRSVP = async (id) => {
     await deleteDoc(doc(db, 'rsvps', id));
+  };
+
+  window._saveCode = async (code, name) => {
+    await setDoc(doc(db, 'codes', code), { name });
+  };
+
+  window._deleteCode = async (code) => {
+    await deleteDoc(doc(db, 'codes', code));
   };
 </script>
 
@@ -316,11 +332,10 @@ service cloud.firestore {
 const ADMIN_PASSWORD = 'adrian-silvi-2026';
 const getCfg = k => localStorage.getItem('wcfg_'+k) || '';
 const setCfg = (k,v) => localStorage.setItem('wcfg_'+k, v);
-const loadCodes = () => { try { return JSON.parse(localStorage.getItem('wcodes')||'{}'); } catch(e) { return {}; } };
-const saveCodes = obj => localStorage.setItem('wcodes', JSON.stringify(obj));
 
 // Declare at top so all functions can access it
 let allData = [], currentFilter = 'all', unsubscribe = null;
+let codesData = {}; // live from Firestore
 
 // ── Login ──────────────────────────────────────────────────────
 function doLogin() {
@@ -346,8 +361,16 @@ if (localStorage.getItem('admin_auth')==='1') {
 
 function initApp() {
   document.getElementById('settingPassword').value = getCfg('password') || ADMIN_PASSWORD;
-  renderCodesList();
   loadData();
+  // Start live codes listener
+  const tryStartCodes = () => {
+    if (window._startCodesListener) {
+      window._startCodesListener();
+    } else {
+      setTimeout(tryStartCodes, 100);
+    }
+  };
+  tryStartCodes();
 }
 
 // ── Tabs ───────────────────────────────────────────────────────
@@ -396,6 +419,12 @@ window._onFirebaseError = function(err) {
   console.error('Firebase error:', err);
   document.getElementById('loadingState').style.display='none';
   document.getElementById('loadErrorBanner').style.display='block';
+};
+
+window._onCodesData = function(codes) {
+  codesData = codes;
+  renderCodesList();
+  updateStats(allData); // refresh pending count
 };
 
 // ── Table ──────────────────────────────────────────────────────
@@ -453,8 +482,7 @@ async function deleteRSVP(id, name) {
   }
 }
 function updateStats(data) {
-  const codes=loadCodes();
-  const totalCodes=Object.keys(codes).length;
+  const totalCodes = Object.keys(codesData).length;
   const yes=data.filter(r=>r.attending==='Ja'||r.attending==='Yes');
   const no=data.filter(r=>r.attending==='Nein'||r.attending==='No');
   const childrenTotal=data.reduce((s,r)=>s+(parseInt(r.childrenCount)||0),0);
@@ -485,61 +513,64 @@ function downloadCSV() {
 
 // ── Codes ──────────────────────────────────────────────────────
 function renderCodesList() {
-  const codes=loadCodes();
-  const rsvped=new Set(allData.map(r=>r.code));
-  const keys=Object.keys(codes).sort();
-  document.getElementById('codeCount').textContent=keys.length;
-  const list=document.getElementById('codesList');
-  if(!keys.length){ list.innerHTML='<div class="state-msg" style="padding:1.5rem 1.25rem;text-align:left">Noch keine Codes. Unten hinzufügen →</div>'; return; }
-  list.innerHTML=keys.map(code=>`
+  const rsvped = new Set(allData.map(r=>r.code));
+  const keys = Object.keys(codesData).sort();
+  document.getElementById('codeCount').textContent = keys.length;
+  const list = document.getElementById('codesList');
+  if (!keys.length) {
+    list.innerHTML='<div class="state-msg" style="padding:1.5rem 1.25rem;text-align:left">Noch keine Codes. Unten hinzufügen →</div>';
+    return;
+  }
+  list.innerHTML = keys.map(code=>`
     <div class="code-row fade-in">
       <span class="code-pill">${code}</span>
-      <span class="code-name">${codes[code]}</span>
+      <span class="code-name">${codesData[code]}</span>
       <div class="code-actions">
         <span class="${rsvped.has(code)?'badge-done':'badge-pending'}">${rsvped.has(code)?'✓ RSVP':'ausstehend'}</span>
         <button class="delete-code-btn" onclick="deleteCode('${code}')" title="Löschen">×</button>
       </div>
     </div>`).join('');
 }
-function addCode() {
+
+async function addCode() {
   const cEl=document.getElementById('newCode'), nEl=document.getElementById('newName');
   const code=cEl.value.trim().toUpperCase().replace(/\s+/g,'');
   const name=nEl.value.trim();
-  if(!code||!name){ if(!code)cEl.style.borderColor='var(--red)'; if(!name)nEl.style.borderColor='var(--red)'; setTimeout(()=>{cEl.style.borderColor='';nEl.style.borderColor='';},1200); return; }
-  const codes=loadCodes(); codes[code]=name; saveCodes(codes);
-  cEl.value=''; nEl.value='';
-  renderCodesList();
-  document.getElementById('codesSyncBanner').style.display='block';
+  if (!code||!name) {
+    if (!code) cEl.style.borderColor='var(--red)';
+    if (!name) nEl.style.borderColor='var(--red)';
+    setTimeout(()=>{cEl.style.borderColor='';nEl.style.borderColor='';}, 1200);
+    return;
+  }
+  try {
+    await window._saveCode(code, name);
+    cEl.value=''; nEl.value='';
+  } catch(e) { alert('Speichern fehlgeschlagen: ' + e.message); }
 }
-function deleteCode(code) {
-  if(!confirm(`Code „${code}" (${loadCodes()[code]}) löschen?`)) return;
-  const codes=loadCodes(); delete codes[code]; saveCodes(codes);
-  renderCodesList();
-  document.getElementById('codesSyncBanner').style.display='block';
+
+async function deleteCode(code) {
+  if (!confirm(`Code „${code}" (${codesData[code]}) löschen?`)) return;
+  try {
+    await window._deleteCode(code);
+  } catch(e) { alert('Löschen fehlgeschlagen: ' + e.message); }
 }
-function bulkImport() {
+
+async function bulkImport() {
   const raw=document.getElementById('bulkInput').value.trim();
-  if(!raw) return;
-  const codes=loadCodes(); let added=0,skipped=0;
-  raw.split('\n').map(l=>l.trim()).filter(Boolean).forEach(line=>{
+  if (!raw) return;
+  let added=0, skipped=0;
+  const lines=raw.split('\n').map(l=>l.trim()).filter(Boolean);
+  for (const line of lines) {
     const parts=line.split(/[,\t]/).map(p=>p.trim());
-    if(parts.length>=2){ const code=parts[0].toUpperCase().replace(/\s+/g,''); const name=parts.slice(1).join(', ').trim(); if(code&&name){codes[code]=name;added++;}else skipped++; } else skipped++;
-  });
-  saveCodes(codes); renderCodesList();
+    if (parts.length>=2) {
+      const code=parts[0].toUpperCase().replace(/\s+/g,'');
+      const name=parts.slice(1).join(', ').trim();
+      if (code&&name) { try { await window._saveCode(code,name); added++; } catch(e) { skipped++; } }
+      else skipped++;
+    } else skipped++;
+  }
   document.getElementById('bulkResult').textContent=`${added} hinzugefügt${skipped>0?`, ${skipped} übersprungen`:''}`;
   document.getElementById('bulkInput').value='';
-  document.getElementById('codesSyncBanner').style.display='block';
-}
-function exportIndexHtml() {
-  const codes=loadCodes();
-  fetch('index.html').then(r=>r.text()).then(html=>{
-    const updated=html.replace(/const GUEST_CODES\s*=\s*\{[\s\S]*?\};/,`const GUEST_CODES = ${JSON.stringify(codes,null,2)};`);
-    const blob=new Blob([updated],{type:'text/html;charset=utf-8'});
-    const url=URL.createObjectURL(blob); const a=document.createElement('a');
-    a.href=url; a.download='index.html'; a.click(); URL.revokeObjectURL(url);
-    document.getElementById('codesSyncBanner').style.display='none';
-    flashBanner('codesSavedBanner');
-  }).catch(()=>alert('index.html konnte nicht geladen werden. Stelle sicher dass alle Dateien auf GitHub Pages laufen.'));
 }
 
 function flashBanner(id) { const el=document.getElementById(id); el.style.display='block'; setTimeout(()=>el.style.display='none',3500); }
