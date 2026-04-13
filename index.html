@@ -6,27 +6,101 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
-<link href="https://fonts.cdnfonts.com/css/canyonlands" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Ms+Madi&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
 <title>Silvi &amp; Adrian · 7. August 2026</title>
 
 
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root { --ink: #1a1a1a; --ink-soft: #6b6b6b; --ink-faint: #b8b8b8; --paper: #f9f7f4; --white: #ffffff; --accent: #c8a96e; --border: rgba(26,26,26,0.1); }
-  html, body { height: 100%; background: var(--paper); color: var(--ink); font-family: 'Jost', sans-serif; font-weight: 300; }
-  body { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem; }
-  body::before { content: ''; position: fixed; inset: 0; background-image: linear-gradient(rgba(26,26,26,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(26,26,26,0.03) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; z-index: 0; }
-  .container { position: relative; z-index: 1; width: 100%; max-width: 440px; text-align: center; }
-  .eyebrow { font-size: 10px; font-weight: 500; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 0.8s ease 0.1s forwards; }
-  h1 { font-family: 'Canyonlands', serif; font-style: italic; font-weight: 300; font-size: clamp(3rem, 8vw, 4.5rem); line-height: 1.05; color: var(--ink); margin-bottom: 0.25rem; opacity: 0; animation: fadeUp 0.8s ease 0.2s forwards; }
-  h1 em { font-style: italic; color: var(--ink-soft); }
-  .date { font-family: 'Canyonlands', serif; font-style: italic; font-size: 1.1rem; color: var(--ink-soft); margin-bottom: 3rem; opacity: 0; animation: fadeUp 0.8s ease 0.3s forwards; }
-  .divider { display: flex; align-items: center; gap: 1rem; margin-bottom: 2.5rem; opacity: 0; animation: fadeUp 0.8s ease 0.35s forwards; }
+  html, body { background: var(--paper); color: var(--ink); font-family: 'Jost', sans-serif; font-weight: 300; min-height: 100vh; }
+
+  /* ── Hero ───────────────────────────────────────────────── */
+  .hero {
+    width: 100%;
+    height: 60vh;
+    min-height: 320px;
+    max-height: 520px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+    display: block;
+    filter: brightness(0.92);
+  }
+  /* Gradient fade into paper color at bottom */
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 45%;
+    background: linear-gradient(to bottom, transparent, var(--paper));
+  }
+  /* Names overlaid on hero */
+  .hero-text {
+    position: absolute;
+    bottom: 2rem;
+    left: 0; right: 0;
+    text-align: center;
+    z-index: 2;
+    padding: 0 1rem;
+  }
+  .hero-name {
+    font-family: 'Ms Madi', cursive;
+    font-size: clamp(3.5rem, 10vw, 5.5rem);
+    line-height: 1.05;
+    color: var(--ink);
+    opacity: 0;
+    animation: fadeUp 0.9s ease 0.2s forwards;
+  }
+  .hero-date {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-top: 0.5rem;
+    opacity: 0;
+    animation: fadeUp 0.9s ease 0.4s forwards;
+  }
+
+  /* ── Card section ────────────────────────────────────────── */
+  .lower {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1.5rem 3rem;
+  }
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    max-width: 440px;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.5s forwards;
+  }
   .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-  .divider-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent); }
-  .card { background: var(--white); border: 1px solid var(--border); border-radius: 4px; padding: 2.5rem 2rem; opacity: 0; animation: fadeUp 0.8s ease 0.4s forwards; }
-  .card-title { font-family: 'Canyonlands', serif; font-size: 1.3rem; font-weight: 400; margin-bottom: 0.4rem; }
-  .card-subtitle { font-size: 0.8rem; color: var(--ink-soft); margin-bottom: 1.75rem; line-height: 1.5; }
+  .divider-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+
+  .card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2.5rem 2rem;
+    width: 100%;
+    max-width: 440px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.6s forwards;
+  }
+  .card-title { font-family: 'Ms Madi', cursive; font-size: 1.5rem; font-weight: 400; margin-bottom: 0.4rem; color: var(--ink); }
+  .card-subtitle { font-size: 0.8rem; color: var(--ink-soft); margin-bottom: 1.75rem; line-height: 1.6; }
   .lang-toggle { display: flex; gap: 0.5rem; justify-content: flex-end; margin-bottom: 1.5rem; }
   .lang-btn { font-family: 'Jost', sans-serif; font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 10px; border: 1px solid var(--border); background: transparent; color: var(--ink-soft); cursor: pointer; border-radius: 2px; transition: all 0.15s; }
   .lang-btn.active { background: var(--ink); color: var(--white); border-color: var(--ink); }
@@ -40,7 +114,8 @@
   .submit-btn:hover { opacity: 0.8; }
   .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
   .loading-hint { font-size: 0.72rem; color: var(--ink-faint); margin-top: 0.5rem; min-height: 1rem; }
-  .footer-note { margin-top: 2rem; font-size: 0.72rem; color: var(--ink-faint); opacity: 0; animation: fadeUp 0.8s ease 0.5s forwards; }
+  .footer-note { margin-top: 1.5rem; font-size: 0.72rem; color: var(--ink-faint); text-align: center; opacity: 0; animation: fadeUp 0.8s ease 0.7s forwards; }
+
   @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
   [data-lang="en"] { display: none; }
@@ -52,10 +127,18 @@
 </style>
 </head>
 <body>
-<div class="container">
-  <div class="eyebrow">Save the Date</div>
-  <h1>Silvi <em>&amp;</em><br>Adrian</h1>
-  <p class="date">7. August 2026</p>
+
+<!-- Hero image — top half -->
+<div class="hero">
+  <img class="hero-img" src="Wedding_BG.jpeg" alt="Silvi &amp; Adrian">
+  <div class="hero-text">
+    <div class="hero-name">Silvi &amp; Adrian</div>
+    <div class="hero-date">7. August 2026</div>
+  </div>
+</div>
+
+<!-- Card section — bottom half -->
+<div class="lower">
   <div class="divider"><div class="divider-dot"></div></div>
   <div class="card">
     <div class="lang-toggle">
