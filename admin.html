@@ -3,9 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin · Adrian & Silvi RSVP</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.cdnfonts.com/css/canyonlands" rel="stylesheet">
+<title>Admin · Silvi & Adrian RSVP</title>
+
+
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -16,18 +20,18 @@
     --amber: #8a5700; --amber-light: #fff8e1;
     --border: rgba(26,26,26,0.1);
   }
-  html, body { background: var(--paper); color: var(--ink); font-family: 'DM Sans', sans-serif; font-weight: 300; min-height: 100vh; }
+  html, body { background: var(--paper); color: var(--ink); font-family: 'Jost', sans-serif; font-weight: 300; min-height: 100vh; }
   body::before { content: ''; position: fixed; inset: 0; background-image: linear-gradient(rgba(26,26,26,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(26,26,26,0.03) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; z-index: 0; }
 
   /* Login */
   .login-screen { position: fixed; inset: 0; z-index: 50; background: var(--paper); display: flex; align-items: center; justify-content: center; padding: 2rem; }
   .login-card { background: var(--white); border: 1px solid var(--border); border-radius: 4px; padding: 2.5rem 2rem; width: 100%; max-width: 360px; text-align: center; }
-  .login-title { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 300; margin-bottom: 0.3rem; }
+  .login-title { font-family: 'Canyonlands', serif; font-style: italic; font-size: 1.6rem; font-weight: 300; margin-bottom: 0.3rem; }
   .login-sub { font-size: 0.78rem; color: var(--ink-soft); margin-bottom: 1.75rem; }
-  .pw-input { width: 100%; padding: 0.8rem 1rem; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; border: 1px solid var(--border); background: var(--paper); color: var(--ink); border-radius: 2px; outline: none; text-align: center; letter-spacing: 0.05em; margin-bottom: 0.75rem; transition: border-color 0.2s; }
+  .pw-input { width: 100%; padding: 0.8rem 1rem; font-family: 'Jost', sans-serif; font-size: 0.9rem; border: 1px solid var(--border); background: var(--paper); color: var(--ink); border-radius: 2px; outline: none; text-align: center; letter-spacing: 0.05em; margin-bottom: 0.75rem; transition: border-color 0.2s; }
   .pw-input:focus { border-color: var(--ink); }
   .pw-input.shake { animation: shake 0.3s ease; border-color: var(--red); }
-  .login-btn { width: 100%; padding: 0.8rem; font-family: 'DM Sans', sans-serif; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; background: var(--ink); color: var(--white); border: none; border-radius: 2px; cursor: pointer; transition: opacity 0.2s; }
+  .login-btn { width: 100%; padding: 0.8rem; font-family: 'Jost', sans-serif; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; background: var(--ink); color: var(--white); border: none; border-radius: 2px; cursor: pointer; transition: opacity 0.2s; }
   .login-btn:hover { opacity: 0.8; }
   .login-error { font-size: 0.73rem; color: var(--red); margin-top: 0.5rem; min-height: 1rem; }
 
@@ -37,7 +41,7 @@
 
   /* Tabs */
   .tab-nav { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 2.5rem; position: sticky; top: 0; background: var(--paper); z-index: 10; padding-top: 2rem; }
-  .tab-btn { padding: 0.75rem 1.25rem; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; border: none; background: transparent; color: var(--ink-soft); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.15s; }
+  .tab-btn { padding: 0.75rem 1.25rem; font-family: 'Jost', sans-serif; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; border: none; background: transparent; color: var(--ink-soft); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.15s; }
   .tab-btn.active { color: var(--ink); border-bottom-color: var(--ink); }
   .tab-btn:hover:not(.active) { color: var(--ink); }
   .tab-panel { display: none; }
@@ -45,12 +49,12 @@
 
   /* Headers */
   .panel-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
-  .panel-title { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 300; }
-  .panel-title small { display: block; font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.3rem; }
+  .panel-title { font-family: 'Canyonlands', serif; font-style: italic; font-size: 2rem; font-weight: 300; }
+  .panel-title small { display: block; font-family: 'Jost', sans-serif; font-size: 10px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.3rem; }
   .header-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 
   /* Buttons */
-  .btn { padding: 0.6rem 1.2rem; font-family: 'DM Sans', sans-serif; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.08em; border-radius: 2px; cursor: pointer; transition: all 0.15s; border: 1px solid var(--border); background: var(--white); color: var(--ink); }
+  .btn { padding: 0.6rem 1.2rem; font-family: 'Jost', sans-serif; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.08em; border-radius: 2px; cursor: pointer; transition: all 0.15s; border: 1px solid var(--border); background: var(--white); color: var(--ink); }
   .btn:hover { border-color: var(--ink); }
   .btn-primary { background: var(--ink); color: var(--white); border-color: var(--ink); }
   .btn-primary:hover { opacity: 0.8; }
@@ -69,14 +73,14 @@
   /* Stats */
   .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
   .stat-card { background: var(--white); border: 1px solid var(--border); border-radius: 4px; padding: 1.25rem 1.5rem; }
-  .stat-num { font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; font-weight: 300; line-height: 1; margin-bottom: 0.25rem; }
+  .stat-num { font-family: 'Canyonlands', serif; font-size: 2.5rem; font-weight: 300; line-height: 1; margin-bottom: 0.25rem; }
   .stat-label { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); }
   .stat-card.attending .stat-num { color: var(--green); }
   .stat-card.declining .stat-num { color: var(--red); }
 
   /* Filter */
   .filter-bar { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
-  .filter-btn { padding: 0.4rem 0.9rem; font-family: 'DM Sans', sans-serif; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.05em; border: 1px solid var(--border); background: var(--white); color: var(--ink-soft); border-radius: 2px; cursor: pointer; transition: all 0.15s; }
+  .filter-btn { padding: 0.4rem 0.9rem; font-family: 'Jost', sans-serif; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.05em; border: 1px solid var(--border); background: var(--white); color: var(--ink-soft); border-radius: 2px; cursor: pointer; transition: all 0.15s; }
   .filter-btn.active { background: var(--ink); color: var(--white); border-color: var(--ink); }
 
   /* Table */
@@ -112,7 +116,7 @@
   .delete-code-btn { width: 24px; height: 24px; border: none; background: transparent; color: var(--ink-faint); cursor: pointer; font-size: 1rem; border-radius: 2px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; flex-shrink: 0; }
   .delete-code-btn:hover { background: var(--red-light); color: var(--red); }
   .add-code-form { padding: 1rem 1.25rem; border-top: 1px solid var(--border); background: var(--paper); display: flex; gap: 0.5rem; flex-wrap: wrap; }
-  .code-input-field { flex: 1; min-width: 80px; padding: 0.55rem 0.75rem; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; border: 1px solid var(--border); background: var(--white); color: var(--ink); border-radius: 2px; outline: none; transition: border-color 0.2s; }
+  .code-input-field { flex: 1; min-width: 80px; padding: 0.55rem 0.75rem; font-family: 'Jost', sans-serif; font-size: 0.82rem; border: 1px solid var(--border); background: var(--white); color: var(--ink); border-radius: 2px; outline: none; transition: border-color 0.2s; }
   .code-input-field:focus { border-color: var(--ink); }
   .code-input-field.code-field { font-family: monospace; letter-spacing: 0.1em; text-transform: uppercase; max-width: 110px; }
   .bulk-area { width: 100%; padding: 0.6rem 0.75rem; font-family: monospace; font-size: 0.8rem; border: 1px solid var(--border); background: var(--white); color: var(--ink); border-radius: 2px; outline: none; resize: vertical; min-height: 120px; line-height: 1.6; transition: border-color 0.2s; }
@@ -124,7 +128,7 @@
   .setting-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; flex-wrap: wrap; }
   .setting-row:last-child { margin-bottom: 0; }
   .setting-label { font-size: 0.82rem; color: var(--ink); min-width: 140px; }
-  .setting-input { flex: 1; min-width: 200px; padding: 0.55rem 0.75rem; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; border: 1px solid var(--border); background: var(--paper); color: var(--ink); border-radius: 2px; outline: none; transition: border-color 0.2s; }
+  .setting-input { flex: 1; min-width: 200px; padding: 0.55rem 0.75rem; font-family: 'Jost', sans-serif; font-size: 0.82rem; border: 1px solid var(--border); background: var(--paper); color: var(--ink); border-radius: 2px; outline: none; transition: border-color 0.2s; }
   .setting-input:focus { border-color: var(--ink); }
   .setting-hint { font-size: 0.7rem; color: var(--ink-soft); margin-top: 0.4rem; line-height: 1.5; }
 
@@ -139,7 +143,7 @@
 <div class="login-screen" id="loginScreen">
   <div class="login-card">
     <p style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:.75rem">Admin</p>
-    <h1 class="login-title">Adrian & Silvi</h1>
+    <h1 class="login-title">Silvi & Adrian</h1>
     <p class="login-sub">RSVP Dashboard · 7. August 2026</p>
     <input class="pw-input" id="pwInput" type="password" placeholder="Passwort" onkeydown="if(event.key==='Enter')doLogin()">
     <div class="login-error" id="loginError"></div>
@@ -159,7 +163,7 @@
   <div class="tab-panel active" id="tab-rsvp">
     <div class="panel-header">
       <div class="panel-title">
-        <small>RSVP Übersicht</small>Adrian & Silvi
+        <small>RSVP Übersicht</small>Silvi & Adrian
       </div>
       <div class="header-actions">
         <span class="live-dot" id="liveDot" style="display:none">Live</span>

@@ -3,9 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RSVP · Adrian & Silvi</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.cdnfonts.com/css/canyonlands" rel="stylesheet">
+<title>RSVP · Silvi & Adrian</title>
+
+
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -15,29 +19,29 @@
     --red: #c0392b; --red-light: #fdecea;
     --border: rgba(26,26,26,0.1);
   }
-  html, body { background: var(--paper); color: var(--ink); font-family: 'DM Sans', sans-serif; font-weight: 300; }
+  html, body { background: var(--paper); color: var(--ink); font-family: 'Jost', sans-serif; font-weight: 300; }
   body::before { content: ''; position: fixed; inset: 0; background-image: linear-gradient(rgba(26,26,26,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(26,26,26,0.03) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; z-index: 0; }
   .page { position: relative; z-index: 1; min-height: 100vh; padding: 3rem 1.5rem 4rem; display: flex; flex-direction: column; align-items: center; }
   .top-bar { width: 100%; max-width: 560px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 3rem; }
   .back-link { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); text-decoration: none; transition: color 0.15s; }
   .back-link:hover { color: var(--ink); }
   .lang-toggle { display: flex; gap: 0.4rem; }
-  .lang-btn { font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 10px; border: 1px solid var(--border); background: transparent; color: var(--ink-soft); cursor: pointer; border-radius: 2px; transition: all 0.15s; }
+  .lang-btn { font-family: 'Jost', sans-serif; font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 10px; border: 1px solid var(--border); background: transparent; color: var(--ink-soft); cursor: pointer; border-radius: 2px; transition: all 0.15s; }
   .lang-btn.active { background: var(--ink); color: var(--white); border-color: var(--ink); }
   .header { text-align: center; margin-bottom: 2.5rem; width: 100%; max-width: 560px; }
   .eyebrow { font-size: 10px; font-weight: 500; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; }
-  .guest-name { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 2rem; font-weight: 300; color: var(--ink); margin-bottom: 0.4rem; }
+  .guest-name { font-family: 'Canyonlands', serif; font-style: italic; font-size: 2rem; font-weight: 300; color: var(--ink); margin-bottom: 0.4rem; }
   .header-sub { font-size: 0.82rem; color: var(--ink-soft); }
   .form-card { width: 100%; max-width: 560px; background: var(--white); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
   .form-section { padding: 2rem; border-bottom: 1px solid var(--border); }
   .form-section:last-child { border-bottom: none; }
   .section-label { font-size: 10px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 1rem; }
-  .section-title { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; font-weight: 400; color: var(--ink); margin-bottom: 1.25rem; line-height: 1.3; }
+  .section-title { font-family: 'Canyonlands', serif; font-style: italic; font-size: 1.25rem; font-weight: 400; color: var(--ink); margin-bottom: 1.25rem; line-height: 1.3; }
   .section-desc { font-size: 0.8rem; color: var(--ink-soft); margin-bottom: 1.25rem; line-height: 1.5; }
 
   /* Attend toggle */
   .attend-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
-  .attend-btn { padding: 1rem; border: 1px solid var(--border); background: var(--paper); border-radius: 3px; cursor: pointer; text-align: center; transition: all 0.15s; font-family: 'DM Sans', sans-serif; }
+  .attend-btn { padding: 1rem; border: 1px solid var(--border); background: var(--paper); border-radius: 3px; cursor: pointer; text-align: center; transition: all 0.15s; font-family: 'Jost', sans-serif; }
   .attend-btn .icon { font-size: 1.4rem; margin-bottom: 0.4rem; display: block; }
   .attend-btn .label { font-size: 0.78rem; font-weight: 500; color: var(--ink-soft); display: block; }
   .attend-btn.yes.selected { background: var(--green-light); border-color: var(--green); }
@@ -48,30 +52,30 @@
 
   /* Children */
   .yn-toggle { display: flex; gap: 0.5rem; }
-  .yn-btn { padding: 0.5rem 1.25rem; border: 1px solid var(--border); background: var(--paper); border-radius: 2px; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 500; color: var(--ink-soft); transition: all 0.15s; }
+  .yn-btn { padding: 0.5rem 1.25rem; border: 1px solid var(--border); background: var(--paper); border-radius: 2px; cursor: pointer; font-family: 'Jost', sans-serif; font-size: 0.78rem; font-weight: 500; color: var(--ink-soft); transition: all 0.15s; }
   .yn-btn.selected { background: var(--ink); color: var(--white); border-color: var(--ink); }
   .field-row { margin-top: 1rem; }
   .field-label { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 0.4rem; display: block; }
-  .text-input { width: 100%; padding: 0.7rem 0.9rem; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 300; border: 1px solid var(--border); background: var(--paper); color: var(--ink); border-radius: 2px; outline: none; transition: border-color 0.2s; }
+  .text-input { width: 100%; padding: 0.7rem 0.9rem; font-family: 'Jost', sans-serif; font-size: 0.9rem; font-weight: 300; border: 1px solid var(--border); background: var(--paper); color: var(--ink); border-radius: 2px; outline: none; transition: border-color 0.2s; }
   .text-input:focus { border-color: var(--ink); }
   textarea.text-input { resize: vertical; min-height: 80px; line-height: 1.5; }
   .children-list { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem; }
   .child-row { display: grid; grid-template-columns: 1fr 72px auto; gap: 0.5rem; align-items: center; }
-  .child-row input { padding: 0.6rem 0.8rem; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; border: 1px solid var(--border); background: var(--paper); color: var(--ink); border-radius: 2px; outline: none; width: 100%; }
+  .child-row input { padding: 0.6rem 0.8rem; font-family: 'Jost', sans-serif; font-size: 0.85rem; border: 1px solid var(--border); background: var(--paper); color: var(--ink); border-radius: 2px; outline: none; width: 100%; }
   .child-row input:focus { border-color: var(--ink); }
   .age-input { text-align: center; }
   .remove-child { width: 28px; height: 28px; border: 1px solid var(--border); background: transparent; border-radius: 2px; cursor: pointer; color: var(--ink-soft); font-size: 1rem; display: flex; align-items: center; justify-content: center; transition: all 0.15s; flex-shrink: 0; }
   .remove-child:hover { border-color: var(--red); color: var(--red); }
   .child-header { display: grid; grid-template-columns: 1fr 72px 28px; gap: 0.5rem; margin-top: 1rem; margin-bottom: 0.25rem; }
   .child-header span { font-size: 0.65rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); padding: 0 0.8rem; }
-  .add-child-btn { margin-top: 0.75rem; padding: 0.5rem 1rem; font-family: 'DM Sans', sans-serif; font-size: 0.75rem; font-weight: 500; border: 1px dashed var(--border); background: transparent; color: var(--ink-soft); border-radius: 2px; cursor: pointer; transition: all 0.15s; }
+  .add-child-btn { margin-top: 0.75rem; padding: 0.5rem 1rem; font-family: 'Jost', sans-serif; font-size: 0.75rem; font-weight: 500; border: 1px dashed var(--border); background: transparent; color: var(--ink-soft); border-radius: 2px; cursor: pointer; transition: all 0.15s; }
   .add-child-btn:hover { border-color: var(--ink); color: var(--ink); border-style: solid; }
 
   .collapsible { overflow: hidden; transition: max-height 0.3s ease, opacity 0.3s ease; }
   .collapsible.hidden { max-height: 0 !important; opacity: 0; pointer-events: none; }
 
   .submit-area { width: 100%; max-width: 560px; padding: 2rem 0 0; }
-  .submit-btn { width: 100%; padding: 1rem; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; background: var(--ink); color: var(--white); border: none; border-radius: 2px; cursor: pointer; transition: opacity 0.2s; }
+  .submit-btn { width: 100%; padding: 1rem; font-family: 'Jost', sans-serif; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; background: var(--ink); color: var(--white); border: none; border-radius: 2px; cursor: pointer; transition: opacity 0.2s; }
   .submit-btn:hover { opacity: 0.8; }
   .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
   .form-note { font-size: 0.72rem; color: var(--ink-faint); text-align: center; margin-top: 0.75rem; }
@@ -79,7 +83,7 @@
   .success-overlay { display: none; position: fixed; inset: 0; background: var(--paper); z-index: 100; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2rem; }
   .success-overlay.show { display: flex; }
   .success-icon { width: 56px; height: 56px; border-radius: 50%; background: var(--green-light); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; font-size: 1.5rem; }
-  .success-title { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 300; margin-bottom: 0.5rem; }
+  .success-title { font-family: 'Canyonlands', serif; font-style: italic; font-size: 2rem; font-weight: 300; margin-bottom: 0.5rem; }
   .success-sub { font-size: 0.85rem; color: var(--ink-soft); line-height: 1.6; max-width: 340px; }
 
   [data-lang="en"] { display: none; }
@@ -113,7 +117,7 @@
   </div>
 
   <div class="header">
-    <div class="eyebrow">RSVP · Adrian &amp; Silvi · 7. August 2026</div>
+    <div class="eyebrow">RSVP · Silvi &amp; Adrian · 7. August 2026</div>
     <div class="guest-name" id="guestGreeting"></div>
     <p class="header-sub"><span data-lang="de">Bitte bis zum 30. April 2026 antworten.</span><span data-lang="en">Please respond by April 30, 2026.</span></p>
   </div>

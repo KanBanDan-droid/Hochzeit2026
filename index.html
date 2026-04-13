@@ -3,36 +3,40 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Adrian &amp; Silvi · 7. August 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.cdnfonts.com/css/canyonlands" rel="stylesheet">
+<title>Silvi &amp; Adrian · 7. August 2026</title>
+
+
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root { --ink: #1a1a1a; --ink-soft: #6b6b6b; --ink-faint: #b8b8b8; --paper: #f9f7f4; --white: #ffffff; --accent: #c8a96e; --border: rgba(26,26,26,0.1); }
-  html, body { height: 100%; background: var(--paper); color: var(--ink); font-family: 'DM Sans', sans-serif; font-weight: 300; }
+  html, body { height: 100%; background: var(--paper); color: var(--ink); font-family: 'Jost', sans-serif; font-weight: 300; }
   body { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem; }
   body::before { content: ''; position: fixed; inset: 0; background-image: linear-gradient(rgba(26,26,26,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(26,26,26,0.03) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; z-index: 0; }
   .container { position: relative; z-index: 1; width: 100%; max-width: 440px; text-align: center; }
   .eyebrow { font-size: 10px; font-weight: 500; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 0.8s ease 0.1s forwards; }
-  h1 { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: clamp(3rem, 8vw, 4.5rem); line-height: 1.05; color: var(--ink); margin-bottom: 0.25rem; opacity: 0; animation: fadeUp 0.8s ease 0.2s forwards; }
+  h1 { font-family: 'Canyonlands', serif; font-style: italic; font-weight: 300; font-size: clamp(3rem, 8vw, 4.5rem); line-height: 1.05; color: var(--ink); margin-bottom: 0.25rem; opacity: 0; animation: fadeUp 0.8s ease 0.2s forwards; }
   h1 em { font-style: italic; color: var(--ink-soft); }
-  .date { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.1rem; color: var(--ink-soft); margin-bottom: 3rem; opacity: 0; animation: fadeUp 0.8s ease 0.3s forwards; }
+  .date { font-family: 'Canyonlands', serif; font-style: italic; font-size: 1.1rem; color: var(--ink-soft); margin-bottom: 3rem; opacity: 0; animation: fadeUp 0.8s ease 0.3s forwards; }
   .divider { display: flex; align-items: center; gap: 1rem; margin-bottom: 2.5rem; opacity: 0; animation: fadeUp 0.8s ease 0.35s forwards; }
   .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
   .divider-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent); }
   .card { background: var(--white); border: 1px solid var(--border); border-radius: 4px; padding: 2.5rem 2rem; opacity: 0; animation: fadeUp 0.8s ease 0.4s forwards; }
-  .card-title { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 400; margin-bottom: 0.4rem; }
+  .card-title { font-family: 'Canyonlands', serif; font-size: 1.3rem; font-weight: 400; margin-bottom: 0.4rem; }
   .card-subtitle { font-size: 0.8rem; color: var(--ink-soft); margin-bottom: 1.75rem; line-height: 1.5; }
   .lang-toggle { display: flex; gap: 0.5rem; justify-content: flex-end; margin-bottom: 1.5rem; }
-  .lang-btn { font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 10px; border: 1px solid var(--border); background: transparent; color: var(--ink-soft); cursor: pointer; border-radius: 2px; transition: all 0.15s; }
+  .lang-btn { font-family: 'Jost', sans-serif; font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 10px; border: 1px solid var(--border); background: transparent; color: var(--ink-soft); cursor: pointer; border-radius: 2px; transition: all 0.15s; }
   .lang-btn.active { background: var(--ink); color: var(--white); border-color: var(--ink); }
   .input-group { position: relative; margin-bottom: 1rem; }
-  .code-input { width: 100%; padding: 0.9rem 1rem; font-family: 'DM Sans', sans-serif; font-size: 1.1rem; font-weight: 400; letter-spacing: 0.15em; text-align: center; text-transform: uppercase; border: 1px solid var(--border); background: var(--paper); color: var(--ink); border-radius: 2px; outline: none; transition: border-color 0.2s; }
+  .code-input { width: 100%; padding: 0.9rem 1rem; font-family: 'Jost', sans-serif; font-size: 1.1rem; font-weight: 400; letter-spacing: 0.15em; text-align: center; text-transform: uppercase; border: 1px solid var(--border); background: var(--paper); color: var(--ink); border-radius: 2px; outline: none; transition: border-color 0.2s; }
   .code-input:focus { border-color: var(--ink); }
   .code-input.error { border-color: #c0392b; animation: shake 0.3s ease; }
   .code-input:disabled { opacity: 0.4; }
   .error-msg { font-size: 0.75rem; color: #c0392b; margin-top: 0.5rem; min-height: 1.1rem; text-align: left; }
-  .submit-btn { width: 100%; padding: 0.9rem; font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; background: var(--ink); color: var(--white); border: none; border-radius: 2px; cursor: pointer; transition: opacity 0.2s; margin-top: 0.5rem; }
+  .submit-btn { width: 100%; padding: 0.9rem; font-family: 'Jost', sans-serif; font-size: 0.8rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; background: var(--ink); color: var(--white); border: none; border-radius: 2px; cursor: pointer; transition: opacity 0.2s; margin-top: 0.5rem; }
   .submit-btn:hover { opacity: 0.8; }
   .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
   .loading-hint { font-size: 0.72rem; color: var(--ink-faint); margin-top: 0.5rem; min-height: 1rem; }
@@ -50,7 +54,7 @@
 <body>
 <div class="container">
   <div class="eyebrow">Save the Date</div>
-  <h1>Adrian <em>&amp;</em><br>Silvi</h1>
+  <h1>Silvi <em>&amp;</em><br>Adrian</h1>
   <p class="date">7. August 2026</p>
   <div class="divider"><div class="divider-dot"></div></div>
   <div class="card">
