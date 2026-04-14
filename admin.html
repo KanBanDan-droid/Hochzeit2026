@@ -457,8 +457,8 @@ window._onCodesData = function(codes) {
 // ── Table ──────────────────────────────────────────────────────
 function filterData(d) {
   if (currentFilter==='all') return d;
-  if (currentFilter==='yes') return d.filter(r=>r.attending==='Ja'||r.attending==='Yes');
-  if (currentFilter==='no') return d.filter(r=>r.attending==='Nein'||r.attending==='No');
+  if (currentFilter==='yes') return d.filter(r => isAnyYes(r));
+  if (currentFilter==='no') return d.filter(r => !isAnyYes(r));
   if (currentFilter==='children') return d.filter(r=>parseInt(r.childrenCount)>0);
   return d;
 }
@@ -514,19 +514,34 @@ document.addEventListener('click', e => {
   const btn = e.target.closest('.del-rsvp-btn');
   if (btn) deleteRSVP(btn.dataset.id, btn.dataset.name);
 });
+function countPersons(r) {
+  // New format (couple): "Alice: Ja / Daniel: Nein"
+  // Old format (single): "Ja" or "Yes"
+  const att = r.attending || '';
+  if (att.includes('/')) {
+    // Couple — count how many said Ja/Yes
+    return att.split('/').filter(part => part.includes('Ja') || part.includes('Yes')).length;
+  }
+  // Single person
+  return (att === 'Ja' || att === 'Yes') ? 1 : 0;
+}
+
+function isAnyYes(r) {
+  return countPersons(r) > 0;
+}
+
 function updateStats(data) {
   const totalCodes = Object.keys(codesData).length;
-  const yes=data.filter(r=>r.attending==='Ja'||r.attending==='Yes');
-  const no=data.filter(r=>r.attending==='Nein'||r.attending==='No');
-  const childrenTotal=data.reduce((s,r)=>s+(parseInt(r.childrenCount)||0),0);
-  let persons=yes.length;
-  yes.forEach(r=>{ if(r.companion&&r.companion!=='—'&&r.companion!=='Nein'&&r.companion!=='No') persons++; });
-  document.getElementById('statTotal').textContent=data.length;
-  document.getElementById('statYes').textContent=yes.length;
-  document.getElementById('statNo').textContent=no.length;
-  document.getElementById('statPending').textContent=Math.max(0,totalCodes-data.length);
-  document.getElementById('statGuests').textContent=persons;
-  document.getElementById('statChildren').textContent=childrenTotal;
+  const withYes = data.filter(r => isAnyYes(r));
+  const allNo   = data.filter(r => !isAnyYes(r));
+  const childrenTotal = data.reduce((s,r) => s+(parseInt(r.childrenCount)||0), 0);
+  const persons = data.reduce((s,r) => s + countPersons(r), 0);
+  document.getElementById('statTotal').textContent = data.length;
+  document.getElementById('statYes').textContent = withYes.length;
+  document.getElementById('statNo').textContent = allNo.length;
+  document.getElementById('statPending').textContent = Math.max(0, totalCodes - data.length);
+  document.getElementById('statGuests').textContent = persons;
+  document.getElementById('statChildren').textContent = childrenTotal;
 }
 function downloadCSV() {
   const headers=['Datum','Code','Name','Zusage','Begleitung','Anzahl Kinder','Kinder Details','Anmerkungen'];
